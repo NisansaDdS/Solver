@@ -1,0 +1,7 @@
+D:\Documents\Visual Studio 2008\Projects\Solver\TicTacToe\obj\Debug\ResolveAssemblyReference.cache
+D:\Documents\Visual Studio 2008\Projects\Solver\TicTacToe\bin\Debug\TicTacToe.pdb
+D:\Documents\Visual Studio 2008\Projects\Solver\TicTacToe\bin\Debug\AI.pdb
+D:\Documents\Visual Studio 2008\Projects\Solver\TicTacToe\obj\Debug\TicTacToe.pdb
+D:\Documents\Visual Studio 2008\Projects\Solver\TicTacToe\bin\Debug\TicTacToe.exe
+D:\Documents\Visual Studio 2008\Projects\Solver\TicTacToe\obj\Debug\TicTacToe.exe
+D:\Documents\Visual Studio 2008\Projects\Solver\TicTacToe\bin\Debug\AI.dll

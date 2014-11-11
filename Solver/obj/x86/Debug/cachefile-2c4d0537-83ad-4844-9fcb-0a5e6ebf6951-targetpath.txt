@@ -1,0 +1,5 @@
+Content\Chess.xnb
+Content\effects.xnb
+Content\BoardSurface_Color.xnb
+Content\xwing.xnb
+Content\W_BishopSurface_Color.xnb

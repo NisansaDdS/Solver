@@ -1,0 +1,11 @@
+D:\Documents\Visual Studio 2008\Projects\Solver\Solver\bin\x86\Debug\Solver.exe
+D:\Documents\Visual Studio 2008\Projects\Solver\Solver\bin\x86\Debug\Solver.pdb
+D:\Documents\Visual Studio 2008\Projects\Solver\Solver\obj\x86\Debug\ResolveAssemblyReference.cache
+D:\Documents\Visual Studio 2008\Projects\Solver\Solver\obj\x86\Debug\Microsoft.Xna.Framework.RuntimeProfile.txt
+D:\Documents\Visual Studio 2008\Projects\Solver\Solver\obj\x86\Debug\Solver.exe
+D:\Documents\Visual Studio 2008\Projects\Solver\Solver\obj\x86\Debug\Solver.pdb
+D:\Documents\Visual Studio 2008\Projects\Solver\Solver\bin\x86\Debug\Content\Chess.xnb
+D:\Documents\Visual Studio 2008\Projects\Solver\Solver\bin\x86\Debug\Content\effects.xnb
+D:\Documents\Visual Studio 2008\Projects\Solver\Solver\bin\x86\Debug\Content\BoardSurface_Color.xnb
+D:\Documents\Visual Studio 2008\Projects\Solver\Solver\bin\x86\Debug\Content\xwing.xnb
+D:\Documents\Visual Studio 2008\Projects\Solver\Solver\bin\x86\Debug\Content\W_BishopSurface_Color.xnb

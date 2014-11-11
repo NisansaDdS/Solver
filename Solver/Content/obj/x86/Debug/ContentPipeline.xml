@@ -1,0 +1,112 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<XnaContent xmlns:Pipeline="Microsoft.Xna.Framework.Content.Pipeline">
+  <Asset Type="Pipeline:BuildItemCollection">
+    <Item>
+      <Source>Chess.fbx</Source>
+      <Name>Chess</Name>
+      <Importer>FbxImporter</Importer>
+      <Processor>ModelProcessor</Processor>
+      <Options>None</Options>
+      <Output>D:\Documents\Visual Studio 2008\Projects\Solver\Solver\bin\x86\Debug\Content\Chess.xnb</Output>
+      <Time>2014-10-17T18:15:10.3900714-07:00</Time>
+      <Dependency>
+        <Key>obj\x86\Debug\Chess_0.xml</Key>
+        <Value>2014-10-17T18:17:14.3879131-07:00</Value>
+      </Dependency>
+    </Item>
+    <Item>
+      <Source>Chess.fbx</Source>
+      <Importer>FbxImporter</Importer>
+      <Options>IntermediateFile, DontCacheImportedData</Options>
+      <Output>obj\x86\Debug\Chess_0.xml</Output>
+      <Time>2014-10-17T18:15:10.3900714-07:00</Time>
+    </Item>
+    <Item>
+      <Source>effects.fx</Source>
+      <Name>effects</Name>
+      <Importer>EffectImporter</Importer>
+      <Processor>EffectProcessor</Processor>
+      <Options>None</Options>
+      <Output>D:\Documents\Visual Studio 2008\Projects\Solver\Solver\bin\x86\Debug\Content\effects.xnb</Output>
+      <Time>2014-10-17T18:22:49.6717449-07:00</Time>
+    </Item>
+    <Item>
+      <Source>BoardSurface_Color.jpg</Source>
+      <Name>BoardSurface_Color</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>D:\Documents\Visual Studio 2008\Projects\Solver\Solver\bin\x86\Debug\Content\BoardSurface_Color.xnb</Output>
+      <Time>2014-10-17T18:33:12.0555278-07:00</Time>
+    </Item>
+    <Item>
+      <Source>xwing.x</Source>
+      <Name>xwing</Name>
+      <Importer>XImporter</Importer>
+      <Processor>ModelProcessor</Processor>
+      <Options>None</Options>
+      <Output>D:\Documents\Visual Studio 2008\Projects\Solver\Solver\bin\x86\Debug\Content\xwing.xnb</Output>
+      <Time>2014-10-17T18:47:01.4438301-07:00</Time>
+      <Dependency>
+        <Key>obj\x86\Debug\xwing_0.xml</Key>
+        <Value>2014-10-17T18:47:37.1326337-07:00</Value>
+      </Dependency>
+    </Item>
+    <Item>
+      <Source>xwing.x</Source>
+      <Importer>XImporter</Importer>
+      <Options>IntermediateFile, DontCacheImportedData</Options>
+      <Output>obj\x86\Debug\xwing_0.xml</Output>
+      <Time>2014-10-17T18:47:01.4438301-07:00</Time>
+    </Item>
+    <Item>
+      <Source>W_BishopSurface_Color.jpg</Source>
+      <Name>W_BishopSurface_Color</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>D:\Documents\Visual Studio 2008\Projects\Solver\Solver\bin\x86\Debug\Content\W_BishopSurface_Color.xnb</Output>
+      <Time>2014-10-17T19:07:04.0046152-07:00</Time>
+    </Item>
+    <BuildSuccessful>true</BuildSuccessful>
+    <Settings>
+      <TargetPlatform>Windows</TargetPlatform>
+      <BuildConfiguration>Debug</BuildConfiguration>
+      <CompressContent>false</CompressContent>
+      <RootDirectory>D:\Documents\Visual Studio 2008\Projects\Solver\Solver\Content\</RootDirectory>
+      <LoggerRootDirectory>D:\Documents\Visual Studio 2008\Projects\Solver\Solver\</LoggerRootDirectory>
+      <IntermediateDirectory>D:\Documents\Visual Studio 2008\Projects\Solver\Solver\Content\obj\x86\Debug\</IntermediateDirectory>
+      <OutputDirectory>D:\Documents\Visual Studio 2008\Projects\Solver\Solver\bin\x86\Debug\Content\</OutputDirectory>
+    </Settings>
+    <Assemblies>
+      <Assembly>
+        <Key>C:\Program Files\Microsoft XNA\XNA Game Studio\v3.1\References\Windows\x86\Microsoft.Xna.Framework.Content.Pipeline.XImporter.dll</Key>
+        <Value>2009-05-27T11:46:14-07:00</Value>
+      </Assembly>
+      <Assembly>
+        <Key>C:\Program Files\Microsoft XNA\XNA Game Studio\v3.1\References\Windows\x86\Microsoft.Xna.Framework.Content.Pipeline.VideoImporters.dll</Key>
+        <Value>2009-05-27T11:46:06-07:00</Value>
+      </Assembly>
+      <Assembly>
+        <Key>C:\Program Files\Microsoft XNA\XNA Game Studio\v3.1\References\Windows\x86\Microsoft.Xna.Framework.Content.Pipeline.TextureImporter.dll</Key>
+        <Value>2009-05-27T11:46:16-07:00</Value>
+      </Assembly>
+      <Assembly>
+        <Key>C:\Program Files\Microsoft XNA\XNA Game Studio\v3.1\References\Windows\x86\Microsoft.Xna.Framework.Content.Pipeline.FBXImporter.dll</Key>
+        <Value>2009-05-27T11:46:26-07:00</Value>
+      </Assembly>
+      <Assembly>
+        <Key>C:\Program Files\Microsoft XNA\XNA Game Studio\v3.1\References\Windows\x86\Microsoft.Xna.Framework.Content.Pipeline.EffectImporter.dll</Key>
+        <Value>2009-05-27T11:46:12-07:00</Value>
+      </Assembly>
+      <Assembly>
+        <Key>C:\Program Files\Microsoft XNA\XNA Game Studio\v3.1\References\Windows\x86\Microsoft.Xna.Framework.Content.Pipeline.AudioImporters.dll</Key>
+        <Value>2009-05-27T11:46:06-07:00</Value>
+      </Assembly>
+      <Assembly>
+        <Key>C:\Windows\assembly\GAC_32\Microsoft.Xna.Framework.Content.Pipeline\3.1.0.0__6d5c3888ef60e27d\Microsoft.Xna.Framework.Content.Pipeline.dll</Key>
+        <Value>2011-12-04T21:34:44.9233313-08:00</Value>
+      </Assembly>
+    </Assemblies>
+  </Asset>
+</XnaContent>
