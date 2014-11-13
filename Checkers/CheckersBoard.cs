@@ -7,6 +7,7 @@ using AI;
 namespace Checkers
 {
     
+   
         public enum GridEntry : byte
         {
             Empty,
@@ -30,7 +31,8 @@ namespace Checkers
         public class CheckersBoard : GameState
         {
             GridEntry[] m_Values;
-
+            List<GameState> childrenL = null;
+            static int boardSize=10;
 
             public CheckersBoard(GridEntry[] values, bool turnForPlayerW)
             {
@@ -43,11 +45,11 @@ namespace Checkers
             public override string ToString()
             {
                 StringBuilder sb = new StringBuilder();
-                for (int i = 0; i < 8; i++)
+                for (int i = 0; i < boardSize; i++)
                 {
-                    for (int j = 0; j < 8; j++)
+                    for (int j = 0; j < boardSize; j++)
                     {
-                        GridEntry v = m_Values[i * 8 + j];
+                        GridEntry v = m_Values[ConvertToLinear(i , j)];
                         char c = '-';
                         if (v == GridEntry.PlayerW)
                             c = 'w';
@@ -65,22 +67,19 @@ namespace Checkers
                 return sb.ToString();
             }
 
-            //Move child to position xy
-            public GameState GetChildAtPosition(int x, int y)
-            {
-                int i = ConvertToLinear(x, y);
-                GridEntry[] newValues = (GridEntry[])m_Values.Clone();
-
-                if (m_Values[i] != GridEntry.Empty)
-                    throw new Exception(string.Format("invalid index [{0},{1}] is taken by {2}", x, y, m_Values[i]));
-
-                newValues[i] = m_TurnForPlayerOne ? GridEntry.PlayerX : GridEntry.PlayerO;
-                return new TicTacToeBoard(newValues, !m_TurnForPlayerOne);
-            }
-
+           
             private static int ConvertToLinear(int x, int y)
             {
-                return x + y * 8;
+                if ((x < 0) || (y < 0) || (x > boardSize - 1) || (y > boardSize - 1))
+                {
+                    return -1;
+                }
+                return x + y * boardSize;
+            }
+
+            private static int[] ConvertToIndex(int i)
+            {
+                return (new int[] { i % boardSize, i / boardSize });
             }
 
             public override bool IsTerminalNode()
@@ -118,15 +117,26 @@ namespace Checkers
 
             public override IEnumerable<GameState> GetChildren()
             {
-                List<CheckersBoard> children = new List<CheckersBoard>();
-                for (int i = 0; i < m_Values.Length; i++)
+                if (childrenL == null)
                 {
-                    if ((m_TurnForPlayerOne && (m_Values[i]==GridEntry.PlayerW || m_Values[i]==GridEntry.PlayerWk)) ||(!m_TurnForPlayerOne && (m_Values[i]==GridEntry.PlayerB || m_Values[i]==GridEntry.PlayerBk)))
+                    childrenL = new List<GameState>();
+                    for (int i = 0; i < m_Values.Length; i++)
                     {
-                        children.Add(getChildrenByMoving(i));
+                        if ((m_TurnForPlayerOne && (m_Values[i] == GridEntry.PlayerW || m_Values[i] == GridEntry.PlayerWk)) || (!m_TurnForPlayerOne && (m_Values[i] == GridEntry.PlayerB || m_Values[i] == GridEntry.PlayerBk)))
+                        {
+                            List<CheckersBoard> c = getChildrenByMoving(i);
+                            for (int j = 0; j < c.Count; j++)
+                            {
+                                childrenL.Add(c[j]);
+                            }
+                        }
                     }
                 }
-                yield return children;
+
+                for (int i = 0; i < childrenL.Count; i++)
+                {
+                    yield return childrenL[i];
+                }
             }
 
 
@@ -172,6 +182,12 @@ namespace Checkers
             {                
                 List<CheckersBoard> children=new List<CheckersBoard>();
 
+                int[] coords = ConvertToIndex(i);
+
+                int x = coords[0];
+                int y = coords[1];
+
+
                 if (i < 0)
                 {
                     return (children);
@@ -185,7 +201,7 @@ namespace Checkers
                     {
                         int possibleLeft = ConvertToLinear(x + 1, y + 1);
                         // int possibleRight = ConvertToLinear(x - 1, y + 1);
-                        if (m_Values[possibleLeft] == GridEntry.Empty)
+                        if (possibleLeft>0&&(m_Values[possibleLeft] == GridEntry.Empty))
                         {
                             GridEntry[] newList = getDeepCopy();
                             newList[i] = GridEntry.Empty;
@@ -210,7 +226,7 @@ namespace Checkers
                     {
                         int possibleLeft = ConvertToLinear(x - 1, y - 1);
                         // int possibleRight = ConvertToLinear(x + 1, y - 1);
-                        if (m_Values[possibleLeft] == GridEntry.Empty)
+                        if (possibleLeft>0&&(m_Values[possibleLeft] == GridEntry.Empty))
                         {
                             GridEntry[] newList = getDeepCopy();
                             newList[i] = GridEntry.Empty;
@@ -302,7 +318,12 @@ namespace Checkers
                 }
             }
 
-
+            public GameState FindNextMove1(int depth)
+            {
+                GameState ret = null; 
+                MiniMax(depth, m_TurnForPlayerOne, int.MinValue + 1, int.MaxValue - 1, out ret);               
+                return ret;
+            }
 
         }
 }

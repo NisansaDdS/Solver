@@ -28,7 +28,7 @@
       <Processor>EffectProcessor</Processor>
       <Options>None</Options>
       <Output>D:\Documents\Visual Studio 2008\Projects\Solver\Solver\bin\x86\Debug\Content\effects.xnb</Output>
-      <Time>2014-10-17T18:22:49.6717449-07:00</Time>
+      <Time>2014-11-11T18:42:09.0193276-08:00</Time>
     </Item>
     <Item>
       <Source>BoardSurface_Color.jpg</Source>
@@ -37,7 +37,7 @@
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
       <Output>D:\Documents\Visual Studio 2008\Projects\Solver\Solver\bin\x86\Debug\Content\BoardSurface_Color.xnb</Output>
-      <Time>2014-10-17T18:33:12.0555278-07:00</Time>
+      <Time>2014-11-11T18:42:09.0103271-08:00</Time>
     </Item>
     <Item>
       <Source>xwing.x</Source>
@@ -46,10 +46,10 @@
       <Processor>ModelProcessor</Processor>
       <Options>None</Options>
       <Output>D:\Documents\Visual Studio 2008\Projects\Solver\Solver\bin\x86\Debug\Content\xwing.xnb</Output>
-      <Time>2014-10-17T18:47:01.4438301-07:00</Time>
+      <Time>2014-11-11T18:42:09.0273281-08:00</Time>
       <Dependency>
         <Key>obj\x86\Debug\xwing_0.xml</Key>
-        <Value>2014-10-17T18:47:37.1326337-07:00</Value>
+        <Value>2014-11-12T15:46:23.1533246-08:00</Value>
       </Dependency>
     </Item>
     <Item>
@@ -57,7 +57,7 @@
       <Importer>XImporter</Importer>
       <Options>IntermediateFile, DontCacheImportedData</Options>
       <Output>obj\x86\Debug\xwing_0.xml</Output>
-      <Time>2014-10-17T18:47:01.4438301-07:00</Time>
+      <Time>2014-11-11T18:42:09.0273281-08:00</Time>
     </Item>
     <Item>
       <Source>W_BishopSurface_Color.jpg</Source>
@@ -66,7 +66,7 @@
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
       <Output>D:\Documents\Visual Studio 2008\Projects\Solver\Solver\bin\x86\Debug\Content\W_BishopSurface_Color.xnb</Output>
-      <Time>2014-10-17T19:07:04.0046152-07:00</Time>
+      <Time>2014-11-11T18:42:09.0183275-08:00</Time>
     </Item>
     <BuildSuccessful>true</BuildSuccessful>
     <Settings>
