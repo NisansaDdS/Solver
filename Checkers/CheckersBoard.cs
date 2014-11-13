@@ -129,6 +129,12 @@ namespace Checkers
                             {
                                 childrenL.Add(c[j]);
                             }
+
+                            if (c.Count == 0)
+                            {
+                                int[] coords = ConvertToIndex(i);
+                                Console.WriteLine("Cannot move " + m_Values[i] + " at ( " + coords[0] + " , " + coords[1]+" )");
+                            }
                         }
                     }
                 }
@@ -200,7 +206,7 @@ namespace Checkers
                     if (m_Values[i] == GridEntry.PlayerW)
                     {
                         int possibleLeft = ConvertToLinear(x + 1, y + 1);
-                        // int possibleRight = ConvertToLinear(x - 1, y + 1);
+                        int possibleRight = ConvertToLinear(x - 1, y + 1);
                         if (possibleLeft>0&&(m_Values[possibleLeft] == GridEntry.Empty))
                         {
                             GridEntry[] newList = getDeepCopy();
@@ -209,7 +215,7 @@ namespace Checkers
                             CheckersBoard child =new CheckersBoard(newList, !m_TurnForPlayerOne);
                             children.Add(child);
                         }
-                        // if (m_Values[possibleRight] = GridEntry.Empty)
+                        //if (possibleRight>0&&m_Values[possibleRight] = GridEntry.Empty)
                         //  {
                         //ToDo
                         //  }

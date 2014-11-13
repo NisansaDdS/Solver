@@ -9,7 +9,7 @@ namespace Checkers
     {
         static void Main(string[] args)
         {
-            int depth = 8;
+            int depth = 1;
             CheckersGame game = new CheckersGame();
             Console.WriteLine(game.Current.ToString());
             Console.ReadLine();
