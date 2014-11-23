@@ -166,12 +166,12 @@ namespace Checkers
             public override void ComputeScore()
             {
                 int ret = 0;
-                int kingWeight = 5;
+                int kingWeight = 10;
                 int pawnWeight = 1;
                 for (int i = 0; i < m_Values.Length; i++)
                 {
-                    if ((TurnForPlayerOne && (m_Values[i] == GridEntry.PlayerW || m_Values[i] == GridEntry.PlayerWk)) || (!TurnForPlayerOne && (m_Values[i] == GridEntry.PlayerB || m_Values[i] == GridEntry.PlayerBk)))
-                    {
+                   // if ((TurnForPlayerOne && (m_Values[i] == GridEntry.PlayerW || m_Values[i] == GridEntry.PlayerWk)) || (!TurnForPlayerOne && (m_Values[i] == GridEntry.PlayerB || m_Values[i] == GridEntry.PlayerBk)))
+                   // {
                         switch (m_Values[i])
                         {
                             case GridEntry.PlayerB:
@@ -189,9 +189,16 @@ namespace Checkers
                             default:                                
                                 break;
                         }
-                    }
+                  //  }
                 }
-                m_Score = ret;
+                if (TurnForPlayerOne)
+                {
+                    m_Score = ret;
+                }
+                else
+                {
+                    m_Score = -ret;
+                }
             }
 
 
@@ -246,13 +253,13 @@ namespace Checkers
                         
 
                         if (possibleLeft2 >= 0 && (m_Values[possibleLeft2] == GridEntry.Empty) && ((m_Values[possibleLeft] == GridEntry.PlayerB) || (m_Values[possibleLeft] == GridEntry.PlayerBk)))
-                        {                           
-                            CaptureWhiteNormal(i, children, possibleLeft, possibleLeft2, nextRow2);
+                        {
+                            CaptureWhite(GridEntry.PlayerW,i, children, possibleLeft, possibleLeft2, nextRow2);
                             captureHappened = true;                            
                         }
                         if (possibleRight2 >= 0 && (m_Values[possibleRight2] == GridEntry.Empty) && ((m_Values[possibleRight] == GridEntry.PlayerB) || (m_Values[possibleRight] == GridEntry.PlayerBk)))
-                        {                           
-                            CaptureWhiteNormal(i, children, possibleRight, possibleRight2, nextRow2);
+                        {
+                            CaptureWhite(GridEntry.PlayerW,i, children, possibleRight, possibleRight2, nextRow2);
                             captureHappened = true;                           
                         }
 
@@ -267,12 +274,12 @@ namespace Checkers
 
                         if (possibleBackLeft2 >= 0 && (m_Values[possibleBackLeft2] == GridEntry.Empty) && ((m_Values[possibleBackLeft] == GridEntry.PlayerB) || (m_Values[possibleBackLeft] == GridEntry.PlayerBk)))
                         {
-                            CaptureWhiteNormal(i, children, possibleBackLeft, possibleBackLeft2, nextBackRow2);
+                            CaptureWhite(GridEntry.PlayerW,i, children, possibleBackLeft, possibleBackLeft2, nextBackRow2);
                             captureHappened = true;
                         }
                         if (possibleBackRight2 >= 0 && (m_Values[possibleBackRight2] == GridEntry.Empty) && ((m_Values[possibleBackRight] == GridEntry.PlayerB) || (m_Values[possibleBackRight] == GridEntry.PlayerBk)))
                         {
-                            CaptureWhiteNormal(i, children, possibleBackRight, possibleBackRight2, nextBackRow2);
+                            CaptureWhite(GridEntry.PlayerW,i, children, possibleBackRight, possibleBackRight2, nextBackRow2);
                             captureHappened = true;
                         }
 
@@ -280,6 +287,7 @@ namespace Checkers
                         //Moving one forward is only done if there was no capture in the same step and if this is not an intemediate recursive step.
                         if (!captureHappened && !isRecursive)
                         {
+                            //Console.WriteLine("ooo");
                             if (possibleLeft >= 0 && (m_Values[possibleLeft] == GridEntry.Empty))
                             {
                                 MoveWhite(GridEntry.PlayerW, i, children, possibleLeft, nextRow);
@@ -300,60 +308,50 @@ namespace Checkers
                     }
                     else if (m_Values[i] == GridEntry.PlayerWk)
                     {
-                        Console.WriteLine("Trying to move the white king at "+x+" "+y);
-                        Boolean captureHappened = false;
+                        Console.WriteLine("Trying to move the white king at "+x+" "+y);                                              
                         
-                        
-                        //Left back
+                        //Back Left
                         for (int j = 1; ; j++)
                         {
-                            int leftCandidate = ConvertToLinear(x - j, y - j);
-                            
-                            //If out of the board, stop
-                            if (leftCandidate < 0)
+                            if (!MoveKing(i, isRecursive, children, x, y, -j,-j))
                             {
                                 break;
                             }
-
-                            //If blocked by a friendly piece, stop
-                            if (m_Values[leftCandidate] == GridEntry.PlayerW || m_Values[leftCandidate] == GridEntry.PlayerWk)
-                            {
-                                break;
-                            }
-
-                            //If blocked by an enemy piece,
-                            if (m_Values[leftCandidate] == GridEntry.PlayerB || m_Values[leftCandidate] == GridEntry.PlayerBk)
-                            {
-                                int leftJumpCandidate = ConvertToLinear(x + i + 1, y + i + 1);
-
-                                //If jumping position out of the board, stop
-                                if (leftJumpCandidate < 0)
-                                {
-                                    break;
-                                }
-
-                                //If jumping position blocked, stop
-                                if (m_Values[leftCandidate] != GridEntry.Empty)
-                                {
-                                    break;
-                                }
-
-                                //Capture!!!!
-
-                            }
-                            else
-                            {
-                                MoveWhite(GridEntry.PlayerWk, i, children, leftCandidate, x + j);
-                            }
-
-
                         }
 
+                        //Back Right
+                        for (int j = 1; ; j++)
+                        {
+                            if (!MoveKing(i, isRecursive, children, x, y, -j, +j))
+                            {
+                                break;
+                            }
+                        }
 
-                        List<Int32> BackLeftDiag = new List<Int32>();
-                        List<Int32> BackRightDiag = new List<Int32>();
-                        List<Int32> FrontLeftDiag = new List<Int32>();
-                        List<Int32> FrontRightDiag = new List<Int32>();
+                        //Front Left
+                        for (int j = 1; ; j++)
+                        {
+                            if (!MoveKing(i, isRecursive, children, x, y, +j, -j))
+                            {
+                                break;
+                            }
+                        }
+
+                        //Front Right
+                        for (int j = 1; ; j++)
+                        {
+                            if (!MoveKing(i, isRecursive, children, x, y, +j, +j))
+                            {
+                                break;
+                            }
+                        }
+
+                        if (isRecursive && children.Count == 0) //We cannot move this piece anymore with captures. Which means this is the state that we hand over to the other player
+                        {
+                            GridEntry[] newList = getDeepCopy();
+                            CheckersBoard child = new CheckersBoard(newList, !TurnForPlayerOne);
+                            children.Add(child);
+                        }
                         
                     }
                   
@@ -440,6 +438,79 @@ namespace Checkers
                 return (children);
             }
 
+            private bool MoveKing(int i, Boolean isRecursive, List<CheckersBoard> children, int x, int y, int j,int k)
+            {
+                int candidate = ConvertToLinear(x + j, y + k);
+                int shiftX= j>0 ? 1: -1;
+                int shiftY = k > 0 ? 1 : -1;
+
+                //If out of the board, stop
+                if (candidate < 0)
+                {
+                    return false;
+                }
+
+                //If blocked by a friendly piece, stop
+                if (m_Values[candidate] == GridEntry.PlayerW || m_Values[candidate] == GridEntry.PlayerWk)
+                {
+                    return false;
+                }
+
+                //If blocked by an enemy piece,
+                if (m_Values[candidate] == GridEntry.PlayerB || m_Values[candidate] == GridEntry.PlayerBk)
+                {
+                    int jumpCandidate = ConvertToLinear(x + j + shiftX, y + k + shiftY);
+
+                    //If jumping position out of the board, stop
+                    if (jumpCandidate < 0)
+                    {
+                        return false;
+                    }
+
+                    //If jumping position blocked, stop
+                    if (m_Values[jumpCandidate] != GridEntry.Empty)
+                    {
+                        return false;
+                    }
+
+                    CaptureWhite(GridEntry.PlayerWk, i, children, candidate, jumpCandidate, x + j + shiftX);
+                    return false; //If captured stop
+
+                }
+                else if (!isRecursive)
+                {
+                    MoveWhite(GridEntry.PlayerWk, i, children, candidate, x + j);                    
+                }
+
+                return true;
+            }
+
+            private bool isSameTeam(GridEntry currentType,int target)
+            {
+                if (m_Values[candidate] == currentType)
+                {
+                    return true;
+                }
+                else if (currentType == GridEntry.PlayerW && m_Values[candidate] == GridEntry.PlayerWk)
+                {
+                    return true;
+                }
+                else if (currentType == GridEntry.PlayerWk && m_Values[candidate] == GridEntry.PlayerW)
+                {
+                    return true;
+                }
+                else if (currentType == GridEntry.PlayerB && m_Values[candidate] == GridEntry.PlayerBk)
+                {
+                    return true;
+                }
+                else if (currentType == GridEntry.PlayerBk && m_Values[candidate] == GridEntry.PlayerB)
+                {
+                    return true;
+                }
+                return false;
+            }
+
+            
 
             private void CaptureBlackNormal(int i, List<CheckersBoard> children, int possibleTargetLocation, int possibleEndLocation, int endingRow)
             {
@@ -477,7 +548,7 @@ namespace Checkers
 
 
 
-            private void CaptureWhiteNormal(int i, List<CheckersBoard> children, int possibleTargetLocation, int possibleEndLocation, int endingRow)
+            private void CaptureWhite(GridEntry currentType,int i, List<CheckersBoard> children, int possibleTargetLocation, int possibleEndLocation, int endingRow)
             {
 
                 GridEntry[] newList = getDeepCopy();
@@ -489,7 +560,7 @@ namespace Checkers
                 }
                 else
                 {
-                    newList[possibleEndLocation] = GridEntry.PlayerW;
+                    newList[possibleEndLocation] = currentType;
                 }
 
                 CheckersBoard reccursivechild = new CheckersBoard(newList, TurnForPlayerOne);
@@ -612,7 +683,9 @@ namespace Checkers
 
             public GameState FindNextMove1(int depth)
             {
-                GameState ret = null; 
+                GameState ret = null;
+                //MiniMaxShortVersion(depth, int.MinValue + 1, int.MaxValue - 1, out ret);
+            
                 MiniMax(depth, TurnForPlayerOne, int.MinValue + 1, int.MaxValue - 1, out ret);               
                 return ret;
             }

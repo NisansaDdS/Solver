@@ -93,10 +93,17 @@ namespace AI
                 return m_Score;
             }
 
+            //Console.WriteLine("......................................");
+           // Console.WriteLine(this.ToString());
+           // Console.WriteLine("////////////////////////////////////////");
             foreach (GameState cur in GetChildren())
             {
                 GameState dummy;
                 int score = cur.MiniMax(depth - 1, !needMax, alpha, beta, out dummy);
+            //    Console.WriteLine("?????????????????????????????????????????");
+            //    Console.WriteLine(cur.ToString());
+            //    Console.WriteLine(score);
+             //   Console.WriteLine("??????????????????????????????????????????");
                 if (!needMax)
                 {
                     if (beta > score)

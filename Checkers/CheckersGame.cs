@@ -35,11 +35,38 @@ namespace Checkers
                 }
             }
 
-            values[3 + 2 * boardSize] = GridEntry.PlayerB;
-            values[6 + 5 * boardSize] = GridEntry.PlayerWk;
-            values[8 + 8 * boardSize] = GridEntry.PlayerB;
-           // values[1 + 3 * boardSize] = GridEntry.PlayerW;
-
+/*
+            values[1 + 0 * boardSize] = GridEntry.PlayerW;
+            values[7 + 0 * boardSize] = GridEntry.PlayerW;
+            values[2 + 1 * boardSize] = GridEntry.PlayerW;
+            values[3 + 2 * boardSize] = GridEntry.PlayerW;
+            values[7 + 2 * boardSize] = GridEntry.PlayerW;
+            values[2 + 3 * boardSize] = GridEntry.PlayerW;
+            values[4 + 3 * boardSize] = GridEntry.PlayerB;
+            values[6 + 3 * boardSize] = GridEntry.PlayerB;
+            values[1 + 4 * boardSize] = GridEntry.PlayerW;
+            values[3 + 4 * boardSize] = GridEntry.PlayerW;
+            values[2 + 5 * boardSize] = GridEntry.PlayerW;
+            values[4 + 5 * boardSize] = GridEntry.PlayerW;
+            values[6 + 5 * boardSize] = GridEntry.PlayerB;
+            values[8 + 5 * boardSize] = GridEntry.PlayerB;
+            values[1 + 6 * boardSize] = GridEntry.PlayerW;
+            values[2 + 7 * boardSize] = GridEntry.PlayerW;
+            values[8 + 7 * boardSize] = GridEntry.PlayerB;
+            values[5 + 8 * boardSize] = GridEntry.PlayerW;
+            values[7 + 8 * boardSize] = GridEntry.PlayerB;
+            values[9 + 8 * boardSize] = GridEntry.PlayerB;
+            values[0 + 9 * boardSize] = GridEntry.PlayerW;
+            values[2 + 9 * boardSize] = GridEntry.PlayerW;
+            values[4 + 9 * boardSize] = GridEntry.PlayerW;
+            values[8 + 9 * boardSize] = GridEntry.PlayerB;
+*/
+            values[6 + 6 * boardSize] = GridEntry.PlayerB;
+           // values[8 + 8 * boardSize] = GridEntry.PlayerWk;
+            values[3 + 4 * boardSize] = GridEntry.PlayerWk;
+            values[7 + 2 * boardSize] = GridEntry.PlayerB;
+            values[1 + 3 * boardSize] = GridEntry.PlayerWk;
+            values[9 + 0 * boardSize] = GridEntry.PlayerWk;
             
 
 
