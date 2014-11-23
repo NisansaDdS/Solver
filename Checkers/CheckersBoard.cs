@@ -36,7 +36,7 @@ namespace Checkers
 
             public CheckersBoard(GridEntry[] values, bool turnForPlayerW)
             {
-                m_TurnForPlayerOne = turnForPlayerW;
+                TurnForPlayerOne = turnForPlayerW;
                 m_Values =values;
                 ComputeScore();
             }
@@ -49,8 +49,9 @@ namespace Checkers
                 {
                     for (int j = 0; j < boardSize; j++)
                     {
-                        GridEntry v = m_Values[ConvertToLinear(i , j)];
-                        char c = '-';
+                        int val = ConvertToLinear(i, j);
+                        GridEntry v = m_Values[val];
+                        char c ='-';
                         if (v == GridEntry.PlayerW)
                             c = 'w';
                         else if (v == GridEntry.PlayerB)
@@ -63,7 +64,7 @@ namespace Checkers
                     }
                     sb.Append('\n');
                 }
-                sb.AppendFormat("score={0},ret={1},{2}", m_Score, RecursiveScore, m_TurnForPlayerOne);
+                sb.AppendFormat("score={0},ret={1},{2}", m_Score, RecursiveScore, TurnForPlayerOne);
                 return sb.ToString();
             }
 
@@ -110,7 +111,7 @@ namespace Checkers
 
             private List<CheckersBoard> getChildrenByMoving(int x, int y)
             {
-                return (getChildrenByMoving(ConvertToLinear(x, y)));
+                return (getChildrenByMoving(ConvertToLinear(x, y),false));
             }
 
 
@@ -122,22 +123,38 @@ namespace Checkers
                     childrenL = new List<GameState>();
                     for (int i = 0; i < m_Values.Length; i++)
                     {
-                        if ((m_TurnForPlayerOne && (m_Values[i] == GridEntry.PlayerW || m_Values[i] == GridEntry.PlayerWk)) || (!m_TurnForPlayerOne && (m_Values[i] == GridEntry.PlayerB || m_Values[i] == GridEntry.PlayerBk)))
+                        if ((TurnForPlayerOne && (m_Values[i] == GridEntry.PlayerW || m_Values[i] == GridEntry.PlayerWk)) || (!TurnForPlayerOne && (m_Values[i] == GridEntry.PlayerB || m_Values[i] == GridEntry.PlayerBk)))
                         {
-                            List<CheckersBoard> c = getChildrenByMoving(i);
+                            List<CheckersBoard> c = getChildrenByMoving(i,false);
                             for (int j = 0; j < c.Count; j++)
                             {
                                 childrenL.Add(c[j]);
                             }
 
-                            if (c.Count == 0)
-                            {
-                                int[] coords = ConvertToIndex(i);
-                                Console.WriteLine("Cannot move " + m_Values[i] + " at ( " + coords[0] + " , " + coords[1]+" )");
-                            }
+                          //  if (c.Count == 0)
+                           // {
+                          //      int[] coords = ConvertToIndex(i);
+                          //      Console.WriteLine("Cannot move " + m_Values[i] + " at "+i+ "-> ( " + coords[0] + " , " + coords[1]+" )");
+                          //  }
                         }
                     }
+
+
+
+                   // Console.WriteLine(childrenL.Count);
+                   
+
+
+
+
                 }
+                else
+                {
+                    Console.WriteLine("Not null");
+                }
+
+
+                
 
                 for (int i = 0; i < childrenL.Count; i++)
                 {
@@ -153,7 +170,7 @@ namespace Checkers
                 int pawnWeight = 1;
                 for (int i = 0; i < m_Values.Length; i++)
                 {
-                    if ((m_TurnForPlayerOne && (m_Values[i] == GridEntry.PlayerW || m_Values[i] == GridEntry.PlayerWk)) || (!m_TurnForPlayerOne && (m_Values[i] == GridEntry.PlayerB || m_Values[i] == GridEntry.PlayerBk)))
+                    if ((TurnForPlayerOne && (m_Values[i] == GridEntry.PlayerW || m_Values[i] == GridEntry.PlayerWk)) || (!TurnForPlayerOne && (m_Values[i] == GridEntry.PlayerB || m_Values[i] == GridEntry.PlayerBk)))
                     {
                         switch (m_Values[i])
                         {
@@ -184,8 +201,19 @@ namespace Checkers
             }
 
 
-            private List<CheckersBoard> getChildrenByMoving(int i)
-            {                
+
+
+
+
+
+
+
+
+            private List<CheckersBoard> getChildrenByMoving(int i,Boolean isRecursive)
+            {
+               
+                
+
                 List<CheckersBoard> children=new List<CheckersBoard>();
 
                 int[] coords = ConvertToIndex(i);
@@ -201,49 +229,124 @@ namespace Checkers
 
 
 
-                if (m_TurnForPlayerOne)
+                if (TurnForPlayerOne)
                 {
                     if (m_Values[i] == GridEntry.PlayerW)
                     {
+                        Boolean captureHappened = false;
+
+                        //Forward capture 
                         int possibleLeft = ConvertToLinear(x + 1, y + 1);
-                        int possibleRight = ConvertToLinear(x - 1, y + 1);
-                        if (possibleLeft>0&&(m_Values[possibleLeft] == GridEntry.Empty))
+                        int possibleRight = ConvertToLinear(x + 1, y - 1);
+                        int nextRow = x + 1;
+
+                        int possibleLeft2 = ConvertToLinear(x + 2, y + 2);
+                        int possibleRight2 = ConvertToLinear(x + 2, y - 2);
+                        int nextRow2 = x + 2;
+                        
+
+                        if (possibleLeft2 >= 0 && (m_Values[possibleLeft2] == GridEntry.Empty) && ((m_Values[possibleLeft] == GridEntry.PlayerB) || (m_Values[possibleLeft] == GridEntry.PlayerBk)))
+                        {                           
+                            CaptureWhiteNormal(i, children, possibleLeft, possibleLeft2, nextRow2);
+                            captureHappened = true;                            
+                        }
+                        if (possibleRight2 >= 0 && (m_Values[possibleRight2] == GridEntry.Empty) && ((m_Values[possibleRight] == GridEntry.PlayerB) || (m_Values[possibleRight] == GridEntry.PlayerBk)))
+                        {                           
+                            CaptureWhiteNormal(i, children, possibleRight, possibleRight2, nextRow2);
+                            captureHappened = true;                           
+                        }
+
+                        //Backward capture
+                        int possibleBackLeft = ConvertToLinear(x - 1, y + 1);
+                        int possibleBackRight = ConvertToLinear(x - 1, y - 1);
+                        int nextBackRow = x - 1;
+
+                        int possibleBackLeft2 = ConvertToLinear(x - 2, y + 2);
+                        int possibleBackRight2 = ConvertToLinear(x - 2, y - 2);
+                        int nextBackRow2 = x - 2;
+
+                        if (possibleBackLeft2 >= 0 && (m_Values[possibleBackLeft2] == GridEntry.Empty) && ((m_Values[possibleBackLeft] == GridEntry.PlayerB) || (m_Values[possibleBackLeft] == GridEntry.PlayerBk)))
+                        {
+                            CaptureWhiteNormal(i, children, possibleBackLeft, possibleBackLeft2, nextBackRow2);
+                            captureHappened = true;
+                        }
+                        if (possibleBackRight2 >= 0 && (m_Values[possibleBackRight2] == GridEntry.Empty) && ((m_Values[possibleBackRight] == GridEntry.PlayerB) || (m_Values[possibleBackRight] == GridEntry.PlayerBk)))
+                        {
+                            CaptureWhiteNormal(i, children, possibleBackRight, possibleBackRight2, nextBackRow2);
+                            captureHappened = true;
+                        }
+
+
+                        //Moving one forward is only done if there was no capture in the same step and if this is not an intemediate recursive step.
+                        if (!captureHappened && !isRecursive)
+                        {
+                            if (possibleLeft >= 0 && (m_Values[possibleLeft] == GridEntry.Empty))
+                            {
+                                MoveWhiteNormal(i, children, possibleLeft, nextRow);
+                            }
+                            if (possibleRight >= 0 && (m_Values[possibleRight] == GridEntry.Empty))
+                            {
+                                MoveWhiteNormal(i, children, possibleRight, nextRow);
+                            }
+                        }
+
+                        if (isRecursive && children.Count == 0) //We cannot move this piece anymore with captures. Which means this is the state that we hand over to the other player
                         {
                             GridEntry[] newList = getDeepCopy();
-                            newList[i] = GridEntry.Empty;
-                            newList[possibleLeft] = GridEntry.PlayerW;
-                            CheckersBoard child =new CheckersBoard(newList, !m_TurnForPlayerOne);
+                            CheckersBoard child = new CheckersBoard(newList, !TurnForPlayerOne);
                             children.Add(child);
                         }
-                        //if (possibleRight>0&&m_Values[possibleRight] = GridEntry.Empty)
-                        //  {
-                        //ToDo
-                        //  }
+
+
 
                     }
-                    //   else if (m_Values[i] = GridEntry.PlayerWk)
-                    //   {
-
-                    //                    }
+                  
                 }
                 else
                 {
                     if (m_Values[i] == GridEntry.PlayerB)
                     {
                         int possibleLeft = ConvertToLinear(x - 1, y - 1);
-                        // int possibleRight = ConvertToLinear(x + 1, y - 1);
-                        if (possibleLeft>0&&(m_Values[possibleLeft] == GridEntry.Empty))
+                        int possibleRight = ConvertToLinear(x - 1, y + 1);
+                        int nextRow = x - 1;
+                        //int[] a=ConvertToIndex(i);
+                        //int[] b=ConvertToIndex(possibleLeft);
+                        //int[] c=ConvertToIndex(possibleRight);
+                       // Console.WriteLine(i + " > " + x + " " + y + " " + possibleLeft + " > " + (x - 1) + " " + (y - 1) + " " + possibleRight + " > " + (x + 1) + " " + ((y - 1)));
+                       // Console.WriteLine(i + " > " + a[0] + " " + a[1] + " " + possibleLeft + " > " + b[0] + " " + b[1] + " " + possibleRight + " > " + c[0] + " " + c[1]);
+                        if (!isRecursive)
                         {
-                            GridEntry[] newList = getDeepCopy();
-                            newList[i] = GridEntry.Empty;
-                            newList[possibleLeft] = GridEntry.PlayerB;
-                            CheckersBoard child = new CheckersBoard(newList, !m_TurnForPlayerOne);
-                            children.Add(child);
+                            int possibleLeft2 = ConvertToLinear(x - 2, y - 2);
+                            int possibleRight2 = ConvertToLinear(x - 2, y + 2);
+                            int nextRow2 = x - 2;
+                            Boolean captureHappened = false;
+                            if (possibleLeft2 >= 0 && (m_Values[possibleLeft2] == GridEntry.Empty) && ((m_Values[possibleLeft] == GridEntry.PlayerW) || (m_Values[possibleLeft] == GridEntry.PlayerWk)))
+                            {
+                                //Console.WriteLine(i + " can capture " + possibleLeft + " because " + possibleLeft2 + " empty!!!");
+                                CaptureBlackNormal(i, children, possibleLeft, possibleLeft2, nextRow2);
+                                captureHappened = true;
+                            }
+                            if (possibleRight2 >= 0 && (m_Values[possibleRight2] == GridEntry.Empty) && ((m_Values[possibleRight] == GridEntry.PlayerW) || (m_Values[possibleRight] == GridEntry.PlayerWk)))
+                            {
+                                //Console.WriteLine(i + " can capture " + possibleRight + " because " + possibleRight2 + " empty");
+                                CaptureBlackNormal(i, children, possibleRight, possibleRight2, nextRow2);
+                                captureHappened = true;
+                            } 
+
+
+                            //Moving one forward is only done if there was no capture in the same step
+                            if (!captureHappened)
+                            {
+                                if (possibleLeft >= 0 && (m_Values[possibleLeft] == GridEntry.Empty))
+                                {
+                                    MoveBlackNormal(i, children, possibleLeft, nextRow);
+                                }
+                                if (possibleRight >= 0 && (m_Values[possibleRight] == GridEntry.Empty))
+                                {
+                                    MoveBlackNormal(i, children, possibleRight, nextRow);
+                                }
+                            }
                         }
-                        // if (m_Values[possibleRight] = GridEntry.Empty)
-                        //  {
-                        //ToDo
-                        //  }
 
                     }
                     //   else if (m_Values[i] = GridEntry.PlayerBk)
@@ -251,8 +354,99 @@ namespace Checkers
 
                     //                    }
                 }
+
+
+
+
+
                
                 return (children);
+            }
+
+
+            private void CaptureBlackNormal(int i, List<CheckersBoard> children, int possibleTargetLocation, int possibleEndLocation, int endingRow)
+            {
+
+                GridEntry[] newList = getDeepCopy();
+                newList[i] = GridEntry.Empty;
+                newList[possibleTargetLocation] = GridEntry.Empty; //Kill the enemy piece
+                if (endingRow == 0)
+                {
+                    newList[possibleEndLocation] = GridEntry.PlayerBk;
+                }
+                else
+                {
+                    newList[possibleEndLocation] = GridEntry.PlayerB;
+                }
+
+                CheckersBoard child = new CheckersBoard(newList, !TurnForPlayerOne);
+                children.Add(child);
+            }
+
+
+
+            private void CaptureWhiteNormal(int i, List<CheckersBoard> children, int possibleTargetLocation, int possibleEndLocation, int endingRow)
+            {
+
+                GridEntry[] newList = getDeepCopy();
+                newList[i] = GridEntry.Empty;
+                newList[possibleTargetLocation] = GridEntry.Empty; //Kill the enemy piece
+                if (endingRow == boardSize - 1)
+                {
+                    newList[possibleEndLocation] = GridEntry.PlayerWk;
+                }
+                else
+                {
+                    newList[possibleEndLocation] = GridEntry.PlayerW;
+                }
+
+                CheckersBoard reccursivechild = new CheckersBoard(newList, TurnForPlayerOne);
+               
+
+                List<CheckersBoard> reccursiveChildern = reccursivechild.getChildrenByMoving(possibleEndLocation, true);
+
+                if (reccursiveChildern.Count == 0)
+                {                   
+                    CheckersBoard nonReccursivechild = new CheckersBoard(newList, !TurnForPlayerOne);
+                    children.Add(nonReccursivechild);
+                }
+                else
+                {  
+                    children.AddRange(reccursiveChildern);                   
+                }
+
+            }
+
+            private void MoveBlackNormal(int i, List<CheckersBoard> children, int possibleLocation, int nextRow)
+            {
+                GridEntry[] newList = getDeepCopy();
+                newList[i] = GridEntry.Empty;
+                if (nextRow == 0)
+                {
+                    newList[possibleLocation] = GridEntry.PlayerBk;
+                }
+                else
+                {
+                    newList[possibleLocation] = GridEntry.PlayerB;
+                }
+                CheckersBoard child = new CheckersBoard(newList, !TurnForPlayerOne);
+                children.Add(child);
+            }
+
+            private void MoveWhiteNormal(int i, List<CheckersBoard> children, int possibleLocation, int nextRow)
+            {
+                GridEntry[] newList = getDeepCopy();
+                newList[i] = GridEntry.Empty;
+                if (nextRow == boardSize - 1)
+                {
+                    newList[possibleLocation] = GridEntry.PlayerWk;
+                }
+                else
+                {
+                    newList[possibleLocation] = GridEntry.PlayerW;
+                }
+                CheckersBoard child = new CheckersBoard(newList, !TurnForPlayerOne);
+                children.Add(child);
             }
 
 
@@ -327,7 +521,7 @@ namespace Checkers
             public GameState FindNextMove1(int depth)
             {
                 GameState ret = null; 
-                MiniMax(depth, m_TurnForPlayerOne, int.MinValue + 1, int.MaxValue - 1, out ret);               
+                MiniMax(depth, TurnForPlayerOne, int.MinValue + 1, int.MaxValue - 1, out ret);               
                 return ret;
             }
 

@@ -11,11 +11,20 @@ namespace Checkers
         {
             int depth = 1;
             CheckersGame game = new CheckersGame();
+            //game.Current.TurnForPlayerOne = false; //Start with black
             Console.WriteLine(game.Current.ToString());
             Console.ReadLine();
             while (!game.Current.IsTerminalNode())
             {
-                game.ComputerMakeMove(depth);
+                //Black handicap
+               // if (game.Current.TurnForPlayerOne)
+              //  {
+                    game.ComputerMakeMove(depth);
+              //  }
+              //  else
+              //  {
+              //      game.ComputerMakeMove(1);
+             //   }
                 Console.WriteLine(game.Current.ToString());
                 Console.ReadLine();
             }

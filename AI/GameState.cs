@@ -13,7 +13,13 @@ namespace AI
         protected int m_Score;
         protected bool m_TurnForPlayerOne;
 
+        public bool TurnForPlayerOne
+        {
+            get { return m_TurnForPlayerOne; }
+            set { m_TurnForPlayerOne = value; }
+        }
 
+       
         public int RecursiveScore
         {
             get;

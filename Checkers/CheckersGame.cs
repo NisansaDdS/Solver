@@ -21,6 +21,31 @@ namespace Checkers
             return init;
         }
 
+
+        public CheckersGame(Boolean a)
+        {
+            GridEntry[] values = new GridEntry[boardSize * boardSize];
+
+            //Add whites
+            for (int j = 0; j < boardSize; j++)
+            {
+                for (int i = 0; i < boardSize; i++)
+                {
+                    values[i + j * boardSize] = GridEntry.Empty;
+                }
+            }
+
+            values[0 + 0 * boardSize] = GridEntry.PlayerW;
+            values[1 + 1 * boardSize] = GridEntry.PlayerB;
+            values[1 + 3 * boardSize] = GridEntry.PlayerB;
+
+            
+
+
+            init = new CheckersBoard(values, true);
+            Current = init;
+        }
+
         public CheckersGame()
         {
             GridEntry[] values = new GridEntry[boardSize * boardSize];
