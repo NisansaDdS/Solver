@@ -306,47 +306,76 @@ namespace Checkers
                 {
                     if (m_Values[i] == GridEntry.PlayerB)
                     {
+                        Boolean captureHappened = false;
+
+                        //Forward capture 
                         int possibleLeft = ConvertToLinear(x - 1, y - 1);
                         int possibleRight = ConvertToLinear(x - 1, y + 1);
                         int nextRow = x - 1;
+
+                        int possibleLeft2 = ConvertToLinear(x - 2, y - 2);
+                        int possibleRight2 = ConvertToLinear(x - 2, y + 2);
+                        int nextRow2 = x - 2;
+
+                        if (possibleLeft2 >= 0 && (m_Values[possibleLeft2] == GridEntry.Empty) && ((m_Values[possibleLeft] == GridEntry.PlayerW) || (m_Values[possibleLeft] == GridEntry.PlayerWk)))
+                        {
+                            CaptureBlackNormal(i, children, possibleLeft, possibleLeft2, nextRow2);
+                            captureHappened = true;
+                        }
+                        if (possibleRight2 >= 0 && (m_Values[possibleRight2] == GridEntry.Empty) && ((m_Values[possibleRight] == GridEntry.PlayerW) || (m_Values[possibleRight] == GridEntry.PlayerWk)))
+                        {
+                            CaptureBlackNormal(i, children, possibleRight, possibleRight2, nextRow2);
+                            captureHappened = true;
+                        }
+
+                        int possibleBackLeft = ConvertToLinear(x + 1, y - 1);
+                        int possibleBackRight = ConvertToLinear(x + 1, y + 1);
+                        int nextBackRow = x + 1;
+
+                        int possibleBackLeft2 = ConvertToLinear(x + 2, y - 2);
+                        int possibleBackRight2 = ConvertToLinear(x + 2, y + 2);
+                        int nextBackRow2 = x + 2;
+
+                        if (possibleBackLeft2 >= 0 && (m_Values[possibleBackLeft2] == GridEntry.Empty) && ((m_Values[possibleBackLeft] == GridEntry.PlayerW) || (m_Values[possibleBackLeft] == GridEntry.PlayerWk)))
+                        {
+                            CaptureBlackNormal(i, children, possibleBackLeft, possibleBackLeft2, nextBackRow2);
+                            captureHappened = true;
+                        }
+                        if (possibleBackRight2 >= 0 && (m_Values[possibleBackRight2] == GridEntry.Empty) && ((m_Values[possibleBackRight] == GridEntry.PlayerW) || (m_Values[possibleBackRight] == GridEntry.PlayerWk)))
+                        {
+                            CaptureBlackNormal(i, children, possibleBackRight, possibleBackRight2, nextBackRow2);
+                            captureHappened = true;
+                        }
                         //int[] a=ConvertToIndex(i);
                         //int[] b=ConvertToIndex(possibleLeft);
                         //int[] c=ConvertToIndex(possibleRight);
-                       // Console.WriteLine(i + " > " + x + " " + y + " " + possibleLeft + " > " + (x - 1) + " " + (y - 1) + " " + possibleRight + " > " + (x + 1) + " " + ((y - 1)));
-                       // Console.WriteLine(i + " > " + a[0] + " " + a[1] + " " + possibleLeft + " > " + b[0] + " " + b[1] + " " + possibleRight + " > " + c[0] + " " + c[1]);
-                        if (!isRecursive)
+                        // Console.WriteLine(i + " > " + x + " " + y + " " + possibleLeft + " > " + (x - 1) + " " + (y - 1) + " " + possibleRight + " > " + (x + 1) + " " + ((y - 1)));
+                        // Console.WriteLine(i + " > " + a[0] + " " + a[1] + " " + possibleLeft + " > " + b[0] + " " + b[1] + " " + possibleRight + " > " + c[0] + " " + c[1]);
+
+
+
+
+
+                        //Moving one forward is only done if there was no capture in the same step
+                        if (!captureHappened && !isRecursive)
                         {
-                            int possibleLeft2 = ConvertToLinear(x - 2, y - 2);
-                            int possibleRight2 = ConvertToLinear(x - 2, y + 2);
-                            int nextRow2 = x - 2;
-                            Boolean captureHappened = false;
-                            if (possibleLeft2 >= 0 && (m_Values[possibleLeft2] == GridEntry.Empty) && ((m_Values[possibleLeft] == GridEntry.PlayerW) || (m_Values[possibleLeft] == GridEntry.PlayerWk)))
+                            if (possibleLeft >= 0 && (m_Values[possibleLeft] == GridEntry.Empty))
                             {
-                                //Console.WriteLine(i + " can capture " + possibleLeft + " because " + possibleLeft2 + " empty!!!");
-                                CaptureBlackNormal(i, children, possibleLeft, possibleLeft2, nextRow2);
-                                captureHappened = true;
+                                MoveBlackNormal(i, children, possibleLeft, nextRow);
                             }
-                            if (possibleRight2 >= 0 && (m_Values[possibleRight2] == GridEntry.Empty) && ((m_Values[possibleRight] == GridEntry.PlayerW) || (m_Values[possibleRight] == GridEntry.PlayerWk)))
+                            if (possibleRight >= 0 && (m_Values[possibleRight] == GridEntry.Empty))
                             {
-                                //Console.WriteLine(i + " can capture " + possibleRight + " because " + possibleRight2 + " empty");
-                                CaptureBlackNormal(i, children, possibleRight, possibleRight2, nextRow2);
-                                captureHappened = true;
-                            } 
-
-
-                            //Moving one forward is only done if there was no capture in the same step
-                            if (!captureHappened)
-                            {
-                                if (possibleLeft >= 0 && (m_Values[possibleLeft] == GridEntry.Empty))
-                                {
-                                    MoveBlackNormal(i, children, possibleLeft, nextRow);
-                                }
-                                if (possibleRight >= 0 && (m_Values[possibleRight] == GridEntry.Empty))
-                                {
-                                    MoveBlackNormal(i, children, possibleRight, nextRow);
-                                }
+                                MoveBlackNormal(i, children, possibleRight, nextRow);
                             }
                         }
+
+                        if (isRecursive && children.Count == 0) //We cannot move this piece anymore with captures. Which means this is the state that we hand over to the other player
+                        {
+                            GridEntry[] newList = getDeepCopy();
+                            CheckersBoard child = new CheckersBoard(newList, !TurnForPlayerOne);
+                            children.Add(child);
+                        }
+
 
                     }
                     //   else if (m_Values[i] = GridEntry.PlayerBk)
@@ -379,8 +408,23 @@ namespace Checkers
                     newList[possibleEndLocation] = GridEntry.PlayerB;
                 }
 
-                CheckersBoard child = new CheckersBoard(newList, !TurnForPlayerOne);
-                children.Add(child);
+              //  CheckersBoard child = new CheckersBoard(newList, !TurnForPlayerOne);
+               // children.Add(child);
+
+                CheckersBoard reccursivechild = new CheckersBoard(newList, TurnForPlayerOne);
+
+
+                List<CheckersBoard> reccursiveChildern = reccursivechild.getChildrenByMoving(possibleEndLocation, true);
+
+                if (reccursiveChildern.Count == 0)
+                {
+                    CheckersBoard nonReccursivechild = new CheckersBoard(newList, !TurnForPlayerOne);
+                    children.Add(nonReccursivechild);
+                }
+                else
+                {
+                    children.AddRange(reccursiveChildern);
+                }
             }
 
 

@@ -35,9 +35,9 @@ namespace Checkers
                 }
             }
 
-            values[0 + 0 * boardSize] = GridEntry.PlayerW;
-            values[1 + 1 * boardSize] = GridEntry.PlayerB;
-            values[1 + 3 * boardSize] = GridEntry.PlayerB;
+            values[0 + 0 * boardSize] = GridEntry.PlayerB;
+            values[1 + 1 * boardSize] = GridEntry.PlayerW;
+            values[1 + 3 * boardSize] = GridEntry.PlayerW;
 
             
 
