@@ -9,8 +9,8 @@ namespace Checkers
     {
         static void Main(string[] args)
         {
-            int depth = 2;
-            CheckersGame game = new CheckersGame(true);
+            int depth = 4;
+            CheckersGame game = new CheckersGame();
             //game.Current.TurnForPlayerOne = false; //Start with black
             Console.WriteLine(game.Current.ToString());
             Console.ReadLine();

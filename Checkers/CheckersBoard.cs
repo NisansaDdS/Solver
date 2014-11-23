@@ -87,16 +87,12 @@ namespace Checkers
             {
                 if (GameOver)
                     return true;
-                //If both have pieces and can move this is not a terminal node
+                //If either one has run out of pieces, this is a terminal node
                 int wCount = 0;
                 int bcount = 0;
                 foreach (GridEntry v in m_Values)
                 {
-                    if (wCount > 0 && bcount > 0) //And check if each can move
-                    { 
-                        return false;
-                    }
-                    else if (v == GridEntry.PlayerB || v == GridEntry.PlayerBk)
+                    if (v == GridEntry.PlayerB || v == GridEntry.PlayerBk)
                     {
                         bcount++;
                     }
@@ -105,7 +101,21 @@ namespace Checkers
                         wCount++;
                     }
                 }
-                return true;
+
+                if (wCount == 0 || bcount == 0)
+                {
+                    return true;
+                }
+
+
+                //If the current player do not have any leagal moves, this is a terminal node
+                CreateChildren();
+                if (childrenL.Count == 0)
+                {
+                    return true;
+                }
+
+                return false;
             }
 
 
@@ -120,45 +130,28 @@ namespace Checkers
             {
                 if (childrenL == null)
                 {
-                    childrenL = new List<GameState>();
-                    for (int i = 0; i < m_Values.Length; i++)
-                    {
-                        if ((TurnForPlayerOne && (m_Values[i] == GridEntry.PlayerW || m_Values[i] == GridEntry.PlayerWk)) || (!TurnForPlayerOne && (m_Values[i] == GridEntry.PlayerB || m_Values[i] == GridEntry.PlayerBk)))
-                        {
-                            List<CheckersBoard> c = getChildrenByMoving(i,false);
-                            for (int j = 0; j < c.Count; j++)
-                            {
-                                childrenL.Add(c[j]);
-                            }
-
-                          //  if (c.Count == 0)
-                           // {
-                          //      int[] coords = ConvertToIndex(i);
-                          //      Console.WriteLine("Cannot move " + m_Values[i] + " at "+i+ "-> ( " + coords[0] + " , " + coords[1]+" )");
-                          //  }
-                        }
-                    }
-
-
-
-                   // Console.WriteLine(childrenL.Count);
-                   
-
-
-
-
+                    CreateChildren();
                 }
-                else
-                {
-                    Console.WriteLine("Not null");
-                }
-
-
-                
-
+                  
                 for (int i = 0; i < childrenL.Count; i++)
                 {
                     yield return childrenL[i];
+                }
+            }
+
+            private void CreateChildren()
+            {
+                childrenL = new List<GameState>();
+                for (int i = 0; i < m_Values.Length; i++)
+                {
+                    if ((TurnForPlayerOne && (m_Values[i] == GridEntry.PlayerW || m_Values[i] == GridEntry.PlayerWk)) || (!TurnForPlayerOne && (m_Values[i] == GridEntry.PlayerB || m_Values[i] == GridEntry.PlayerBk)))
+                    {
+                        List<CheckersBoard> c = getChildrenByMoving(i, false);
+                        for (int j = 0; j < c.Count; j++)
+                        {
+                            childrenL.Add(c[j]);
+                        }
+                    }
                 }
             }
 
@@ -308,12 +301,12 @@ namespace Checkers
                     }
                     else if (m_Values[i] == GridEntry.PlayerWk)
                     {
-                        Console.WriteLine("Trying to move the white king at "+x+" "+y);                                              
+                                                               
                         
                         //Back Left
                         for (int j = 1; ; j++)
                         {
-                            if (!MoveKing(i, isRecursive, children, x, y, -j,-j))
+                            if (!MoveKing(GridEntry.PlayerWk, i, isRecursive, children, x, y, -j, -j))
                             {
                                 break;
                             }
@@ -322,7 +315,7 @@ namespace Checkers
                         //Back Right
                         for (int j = 1; ; j++)
                         {
-                            if (!MoveKing(i, isRecursive, children, x, y, -j, +j))
+                            if (!MoveKing(GridEntry.PlayerWk, i, isRecursive, children, x, y, -j, +j))
                             {
                                 break;
                             }
@@ -331,7 +324,7 @@ namespace Checkers
                         //Front Left
                         for (int j = 1; ; j++)
                         {
-                            if (!MoveKing(i, isRecursive, children, x, y, +j, -j))
+                            if (!MoveKing(GridEntry.PlayerWk, i, isRecursive, children, x, y, +j, -j))
                             {
                                 break;
                             }
@@ -340,7 +333,7 @@ namespace Checkers
                         //Front Right
                         for (int j = 1; ; j++)
                         {
-                            if (!MoveKing(i, isRecursive, children, x, y, +j, +j))
+                            if (!MoveKing(GridEntry.PlayerWk, i, isRecursive, children, x, y, +j, +j))
                             {
                                 break;
                             }
@@ -424,10 +417,54 @@ namespace Checkers
 
 
                     }
-                    //   else if (m_Values[i] = GridEntry.PlayerBk)
-                    //   {
+                    else if (m_Values[i] == GridEntry.PlayerBk)
+                    {
 
-                    //                    }
+
+                        //Back Left
+                        for (int j = 1; ; j++)
+                        {
+                            if (!MoveKing(GridEntry.PlayerBk, i, isRecursive, children, x, y, -j, -j))
+                            {
+                                break;
+                            }
+                        }
+
+                        //Back Right
+                        for (int j = 1; ; j++)
+                        {
+                            if (!MoveKing(GridEntry.PlayerBk, i, isRecursive, children, x, y, -j, +j))
+                            {
+                                break;
+                            }
+                        }
+
+                        //Front Left
+                        for (int j = 1; ; j++)
+                        {
+                            if (!MoveKing(GridEntry.PlayerBk, i, isRecursive, children, x, y, +j, -j))
+                            {
+                                break;
+                            }
+                        }
+
+                        //Front Right
+                        for (int j = 1; ; j++)
+                        {
+                            if (!MoveKing(GridEntry.PlayerBk, i, isRecursive, children, x, y, +j, +j))
+                            {
+                                break;
+                            }
+                        }
+
+                        if (isRecursive && children.Count == 0) //We cannot move this piece anymore with captures. Which means this is the state that we hand over to the other player
+                        {
+                            GridEntry[] newList = getDeepCopy();
+                            CheckersBoard child = new CheckersBoard(newList, !TurnForPlayerOne);
+                            children.Add(child);
+                        }
+
+                    }
                 }
 
 
@@ -438,7 +475,7 @@ namespace Checkers
                 return (children);
             }
 
-            private bool MoveKing(int i, Boolean isRecursive, List<CheckersBoard> children, int x, int y, int j,int k)
+            private bool MoveKing(GridEntry currentType,int i, Boolean isRecursive, List<CheckersBoard> children, int x, int y, int j,int k)
             {
                 int candidate = ConvertToLinear(x + j, y + k);
                 int shiftX= j>0 ? 1: -1;
@@ -451,13 +488,13 @@ namespace Checkers
                 }
 
                 //If blocked by a friendly piece, stop
-                if (m_Values[candidate] == GridEntry.PlayerW || m_Values[candidate] == GridEntry.PlayerWk)
+                if (isSameTeam(currentType, candidate)) 
                 {
                     return false;
                 }
 
                 //If blocked by an enemy piece,
-                if (m_Values[candidate] == GridEntry.PlayerB || m_Values[candidate] == GridEntry.PlayerBk)
+                if (isDifferentTeam(currentType, candidate))
                 {
                     int jumpCandidate = ConvertToLinear(x + j + shiftX, y + k + shiftY);
 
@@ -473,19 +510,19 @@ namespace Checkers
                         return false;
                     }
 
-                    CaptureWhite(GridEntry.PlayerWk, i, children, candidate, jumpCandidate, x + j + shiftX);
+                    CaptureWhite(currentType, i, children, candidate, jumpCandidate, x + j + shiftX);
                     return false; //If captured stop
 
                 }
                 else if (!isRecursive)
                 {
-                    MoveWhite(GridEntry.PlayerWk, i, children, candidate, x + j);                    
+                    MoveWhite(currentType, i, children, candidate, x + j);                    
                 }
 
                 return true;
             }
 
-            private bool isSameTeam(GridEntry currentType,int target)
+            private bool isSameTeam(GridEntry currentType, int candidate)
             {
                 if (m_Values[candidate] == currentType)
                 {
@@ -510,7 +547,43 @@ namespace Checkers
                 return false;
             }
 
-            
+            private bool isDifferentTeam(GridEntry currentType, int candidate)
+            {
+                
+                if (currentType == GridEntry.PlayerW && m_Values[candidate] == GridEntry.PlayerB)
+                {
+                    return true;
+                }
+                else if (currentType == GridEntry.PlayerW && m_Values[candidate] == GridEntry.PlayerBk)
+                {
+                    return true;
+                }
+                else if (currentType == GridEntry.PlayerWk && m_Values[candidate] == GridEntry.PlayerB)
+                {
+                    return true;
+                }
+                else if (currentType == GridEntry.PlayerWk && m_Values[candidate] == GridEntry.PlayerBk)
+                {
+                    return true;
+                }
+                else if (currentType == GridEntry.PlayerB && m_Values[candidate] == GridEntry.PlayerW)
+                {
+                    return true;
+                }
+                else if (currentType == GridEntry.PlayerB && m_Values[candidate] == GridEntry.PlayerWk)
+                {
+                    return true;
+                }
+                else if (currentType == GridEntry.PlayerBk && m_Values[candidate] == GridEntry.PlayerW)
+                {
+                    return true;
+                }
+                else if (currentType == GridEntry.PlayerBk && m_Values[candidate] == GridEntry.PlayerWk)
+                {
+                    return true;
+                }
+                return false;
+            }
 
             private void CaptureBlackNormal(int i, List<CheckersBoard> children, int possibleTargetLocation, int possibleEndLocation, int endingRow)
             {
