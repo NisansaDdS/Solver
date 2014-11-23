@@ -162,36 +162,26 @@ namespace Checkers
                 int kingWeight = 10;
                 int pawnWeight = 1;
                 for (int i = 0; i < m_Values.Length; i++)
-                {
-                   // if ((TurnForPlayerOne && (m_Values[i] == GridEntry.PlayerW || m_Values[i] == GridEntry.PlayerWk)) || (!TurnForPlayerOne && (m_Values[i] == GridEntry.PlayerB || m_Values[i] == GridEntry.PlayerBk)))
-                   // {
-                        switch (m_Values[i])
-                        {
-                            case GridEntry.PlayerB:
-                                ret -= pawnWeight;
-                                break;
-                            case GridEntry.PlayerBk:
-                                ret -= kingWeight;
-                                break;
-                            case GridEntry.PlayerW:
-                                ret += pawnWeight;
-                                break;
-                            case GridEntry.PlayerWk:
-                                ret += kingWeight;
-                                break;
-                            default:                                
-                                break;
-                        }
-                  //  }
+                {                   
+                    switch (m_Values[i])
+                    {
+                        case GridEntry.PlayerB:
+                            ret -= pawnWeight;
+                            break;
+                        case GridEntry.PlayerBk:
+                            ret -= kingWeight;
+                            break;
+                        case GridEntry.PlayerW:
+                            ret += pawnWeight;
+                            break;
+                        case GridEntry.PlayerWk:
+                            ret += kingWeight;
+                            break;
+                        default:
+                            break;
+                    }
                 }
-                if (TurnForPlayerOne)
-                {
-                    m_Score = ret;
-                }
-                else
-                {
-                    m_Score = -ret;
-                }
+                m_Score = ret;
             }
 
 

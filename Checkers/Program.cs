@@ -16,8 +16,8 @@ namespace Checkers
             Console.ReadLine();
             while (!game.Current.IsTerminalNode())
             {
-                //Black handicap
-                if (game.Current.TurnForPlayerOne)
+                //White handicap
+                if (!game.Current.TurnForPlayerOne)
                {
                     game.ComputerMakeMove(depth);
                }
