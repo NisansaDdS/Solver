@@ -282,11 +282,11 @@ namespace Checkers
                         {
                             if (possibleLeft >= 0 && (m_Values[possibleLeft] == GridEntry.Empty))
                             {
-                                MoveWhiteNormal(i, children, possibleLeft, nextRow);
+                                MoveWhite(GridEntry.PlayerW, i, children, possibleLeft, nextRow);
                             }
                             if (possibleRight >= 0 && (m_Values[possibleRight] == GridEntry.Empty))
                             {
-                                MoveWhiteNormal(i, children, possibleRight, nextRow);
+                                MoveWhite(GridEntry.PlayerW, i, children, possibleRight, nextRow);
                             }
                         }
 
@@ -296,9 +296,65 @@ namespace Checkers
                             CheckersBoard child = new CheckersBoard(newList, !TurnForPlayerOne);
                             children.Add(child);
                         }
+                        
+                    }
+                    else if (m_Values[i] == GridEntry.PlayerWk)
+                    {
+                        Console.WriteLine("Trying to move the white king at "+x+" "+y);
+                        Boolean captureHappened = false;
+                        
+                        
+                        //Left back
+                        for (int j = 1; ; j++)
+                        {
+                            int leftCandidate = ConvertToLinear(x - j, y - j);
+                            
+                            //If out of the board, stop
+                            if (leftCandidate < 0)
+                            {
+                                break;
+                            }
+
+                            //If blocked by a friendly piece, stop
+                            if (m_Values[leftCandidate] == GridEntry.PlayerW || m_Values[leftCandidate] == GridEntry.PlayerWk)
+                            {
+                                break;
+                            }
+
+                            //If blocked by an enemy piece,
+                            if (m_Values[leftCandidate] == GridEntry.PlayerB || m_Values[leftCandidate] == GridEntry.PlayerBk)
+                            {
+                                int leftJumpCandidate = ConvertToLinear(x + i + 1, y + i + 1);
+
+                                //If jumping position out of the board, stop
+                                if (leftJumpCandidate < 0)
+                                {
+                                    break;
+                                }
+
+                                //If jumping position blocked, stop
+                                if (m_Values[leftCandidate] != GridEntry.Empty)
+                                {
+                                    break;
+                                }
+
+                                //Capture!!!!
+
+                            }
+                            else
+                            {
+                                MoveWhite(GridEntry.PlayerWk, i, children, leftCandidate, x + j);
+                            }
 
 
+                        }
 
+
+                        List<Int32> BackLeftDiag = new List<Int32>();
+                        List<Int32> BackRightDiag = new List<Int32>();
+                        List<Int32> FrontLeftDiag = new List<Int32>();
+                        List<Int32> FrontRightDiag = new List<Int32>();
+                        
                     }
                   
                 }
@@ -328,6 +384,7 @@ namespace Checkers
                             captureHappened = true;
                         }
 
+                        //Backward capture
                         int possibleBackLeft = ConvertToLinear(x + 1, y - 1);
                         int possibleBackRight = ConvertToLinear(x + 1, y + 1);
                         int nextBackRow = x + 1;
@@ -346,16 +403,7 @@ namespace Checkers
                             CaptureBlackNormal(i, children, possibleBackRight, possibleBackRight2, nextBackRow2);
                             captureHappened = true;
                         }
-                        //int[] a=ConvertToIndex(i);
-                        //int[] b=ConvertToIndex(possibleLeft);
-                        //int[] c=ConvertToIndex(possibleRight);
-                        // Console.WriteLine(i + " > " + x + " " + y + " " + possibleLeft + " > " + (x - 1) + " " + (y - 1) + " " + possibleRight + " > " + (x + 1) + " " + ((y - 1)));
-                        // Console.WriteLine(i + " > " + a[0] + " " + a[1] + " " + possibleLeft + " > " + b[0] + " " + b[1] + " " + possibleRight + " > " + c[0] + " " + c[1]);
-
-
-
-
-
+                        
                         //Moving one forward is only done if there was no capture in the same step
                         if (!captureHappened && !isRecursive)
                         {
@@ -477,7 +525,7 @@ namespace Checkers
                 children.Add(child);
             }
 
-            private void MoveWhiteNormal(int i, List<CheckersBoard> children, int possibleLocation, int nextRow)
+            private void MoveWhite(GridEntry currentType,int i, List<CheckersBoard> children, int possibleLocation, int nextRow)
             {
                 GridEntry[] newList = getDeepCopy();
                 newList[i] = GridEntry.Empty;
@@ -487,7 +535,7 @@ namespace Checkers
                 }
                 else
                 {
-                    newList[possibleLocation] = GridEntry.PlayerW;
+                    newList[possibleLocation] = currentType;
                 }
                 CheckersBoard child = new CheckersBoard(newList, !TurnForPlayerOne);
                 children.Add(child);
