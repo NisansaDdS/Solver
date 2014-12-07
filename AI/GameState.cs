@@ -30,6 +30,16 @@ namespace AI
             set { m_TurnForPlayerOne = value; }
         }
 
+        public int[] GetScores()
+        {
+            return new int[]{r_Score,m_Score};
+        }
+
+        public void SetScores(int[] scores)
+        {
+            r_Score = scores[0];
+            m_Score = scores[1];
+        }
        
         public int RecursiveScore
         {

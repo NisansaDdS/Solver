@@ -18,14 +18,14 @@ namespace Checkers
             while (!game.Current.IsTerminalNode())
             {
                 //White handicap
-                if (!game.Current.TurnForPlayerOne)
-               {
+              //  if (!game.Current.TurnForPlayerOne)
+               //{
                     game.ComputerMakeMove(depth);
-               }
-               else
-               {
-                   game.ComputerMakeMove(1);
-               }
+              // }
+              // else
+              // {
+             //      game.ComputerMakeMove(1);
+             //  }
                 Console.WriteLine(game.Current.ToString());
                 Console.ReadLine();
                 steps++;

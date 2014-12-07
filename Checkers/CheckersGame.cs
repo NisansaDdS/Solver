@@ -8,7 +8,7 @@ namespace Checkers
     class CheckersGame
     {
         static int boardSize = 10;
-        Dictionary<String, CheckersBoard> transpositionTable = new Dictionary<String, CheckersBoard>();
+        Dictionary<String, int[]> transpositionTable = new Dictionary<String, int[]>();
         static CheckersGame game = null;
         static Boolean isSpecial = false;
 
@@ -160,19 +160,17 @@ namespace Checkers
             }
         }
 
-        public CheckersBoard AddToTranspositionTable(CheckersBoard newC)
+        public int[] AddToTranspositionTable(CheckersBoard newC)
         {
-            CheckersBoard oldC=null;
+            int[] scores=null;
             String key=newC.GetBoardString();
-            if (transpositionTable.TryGetValue(key, out oldC))
+            if (!transpositionTable.TryGetValue(key, out scores))
             {
-                return oldC;
+                scores = newC.GetScores();
+                transpositionTable.Add(key, scores);
+
             }
-            else
-            {
-                transpositionTable.Add(key, newC);
-                return newC;
-            }
+            return scores;
         }
 
         public void printTranspositionTable()
@@ -180,11 +178,11 @@ namespace Checkers
             var enumerator = transpositionTable.GetEnumerator();
             while (enumerator.MoveNext())
             {
-                CheckersBoard c = enumerator.Current.Value;
+                int[] c = enumerator.Current.Value;
                 //Console.WriteLine(c.GetBoardString());
-                if (c.IsScoreDifferent())
+                if (c[0]!=c[1])
                 {
-                    Console.WriteLine(c.GetScoreString());
+                    Console.WriteLine("R score: " + c[0] + " M score: " +c[1]);
                 }
                 //Console.WriteLine();
             }

@@ -141,7 +141,32 @@ namespace Checkers
                 }
                 
 
-                childrenL.Sort(); 
+                childrenL.Sort(); //Do the actual sort
+
+                Random r = new Random();
+                for (int i = 0; i < childrenL.Count-1; i++)
+                {
+                    for (int j = i; j < childrenL.Count; j++)
+                    {
+                        if (CompareValue(childrenL[i], childrenL[j]) == 0)//If both are the same 
+                        {
+                            if (r.Next(1000) > 500) //Swap randomly.
+                            {
+                                GameState temp1 = childrenL[i];
+                                GameState temp2 = childrenL[i];
+                                childrenL.RemoveAt(i);
+                                childrenL.Insert(i, temp2);
+                                childrenL.RemoveAt(j);
+                                childrenL.Insert(j, temp1);
+                            }
+                            //This is done to make sure we do not go in to infnite loops on the same set of moves
+             
+                        }
+                    }
+                }
+                
+                
+
 
                 for (int i = 0; i < childrenL.Count; i++)
                 {
@@ -159,10 +184,8 @@ namespace Checkers
                     {
                         List<CheckersBoard> c = getChildrenByMoving(i, false);
                         for (int j = 0; j < c.Count; j++)
-                        {
-                            bool backupTurn = c[j].TurnForPlayerOne;
-                            c[j]=game.AddToTranspositionTable(c[j]);
-                            c[j].TurnForPlayerOne = backupTurn;
+                        { 
+                            c[j].SetScores(game.AddToTranspositionTable(c[j]));
                             childrenL.Add(c[j]);                            
                         }
                     }
@@ -759,18 +782,32 @@ namespace Checkers
             public override int CompareTo(GameState obj)
             {
                 CheckersBoard boardObj = obj as CheckersBoard;
-                int retVal = 0;
-                if (r_Score > boardObj.r_Score)
-                {
-                    retVal = 1;
-                }
-                else if (r_Score < boardObj.r_Score)
-                {
-                    retVal = -1;
-                }
+                int retVal = CompareValue(this,boardObj);
+             
+
                 if (TurnForPlayerOne)
                 {
                     retVal *= -1;
+                }
+                return retVal;
+            }
+
+            private int CompareValue(GameState c1, GameState c2)
+            {
+                return(CompareValue(c1 as CheckersBoard,c2 as CheckersBoard));
+            }
+
+
+            private int CompareValue(CheckersBoard c1,CheckersBoard c2)
+            {
+                int retVal = 0;
+                if (c1.r_Score > c2.r_Score)
+                {
+                    retVal = 1;
+                }
+                else if (c1.r_Score < c2.r_Score)
+                {
+                    retVal = -1;
                 }
                 return retVal;
             }
