@@ -7,7 +7,7 @@ namespace Checkers
 {
     class Program
     {
-        static void Main(string[] args)
+     /*   static void Main(string[] args)
         {
             int depth = 4;
             CheckersGame game = CheckersGame.getInstance();
@@ -36,6 +36,47 @@ namespace Checkers
             {
                 Console.ReadLine();
             }
+        }*/
+
+
+        static void Main(string[] args)
+        {
+            int depth = 4;
+            int totalSteps = 0;
+            int gameCount = 4;
+            int wVictories = 0;
+            int bVictories = 0;
+            for (int i = 0; i < gameCount; i++)
+            {
+                Console.WriteLine("Playing game "+(i+1)+" of "+gameCount);
+                CheckersGame.Reset();
+                CheckersGame game = CheckersGame.getInstance();
+                int steps = 0;
+                while (!game.Current.IsTerminalNode())
+                {
+                    game.ComputerMakeMove(depth);
+                    steps++;
+                }
+                //Console.WriteLine(game.Current.ToString());
+               
+                if (game.Current.RecursiveScore > 0)
+                {
+                    wVictories++;
+                }
+                else if (game.Current.RecursiveScore < 0)
+                {
+                    bVictories++;
+                }
+                totalSteps += steps;
+            }
+            Console.WriteLine("Total steps used: " + totalSteps);
+            Console.WriteLine("Avg steps used: " + ((double)totalSteps/(double)gameCount));
+            Console.WriteLine("White won count: " + wVictories);
+            Console.WriteLine("Black won count: " + bVictories);
+            Console.ReadLine();
+            
+            
         }
+        
     }
 }

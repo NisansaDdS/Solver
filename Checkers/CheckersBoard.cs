@@ -143,6 +143,7 @@ namespace Checkers
 
                 childrenL.Sort(); //Do the actual sort
 
+                //This is done to reduce the probability of going into infnite loops on the same set of moves
                 Random r = new Random();
                 for (int i = 0; i < childrenL.Count-1; i++)
                 {
@@ -158,9 +159,7 @@ namespace Checkers
                                 childrenL.Insert(i, temp2);
                                 childrenL.RemoveAt(j);
                                 childrenL.Insert(j, temp1);
-                            }
-                            //This is done to make sure we do not go in to infnite loops on the same set of moves
-             
+                            }                            
                         }
                     }
                 }

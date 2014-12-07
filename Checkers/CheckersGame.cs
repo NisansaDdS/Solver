@@ -12,6 +12,12 @@ namespace Checkers
         static CheckersGame game = null;
         static Boolean isSpecial = false;
 
+        public static void Reset()
+        {
+            game = null;
+        }
+
+
         public static CheckersGame getInstance()
         {
             if (game == null)
