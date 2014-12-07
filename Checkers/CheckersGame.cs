@@ -8,12 +8,37 @@ namespace Checkers
     class CheckersGame
     {
         static int boardSize = 10;
+        Dictionary<String, CheckersBoard> transpositionTable = new Dictionary<String, CheckersBoard>();
+        static CheckersGame game = null;
+        static Boolean isSpecial = false;
+
+        public static CheckersGame getInstance()
+        {
+            if (game == null)
+            {
+                if (isSpecial)
+                {
+                    game = new CheckersGame(isSpecial);
+                }
+                else
+                {
+                    game = new CheckersGame();
+                }
+            }
+            return game;
+        }
+
+        public static void setSpecial(Boolean s){
+            isSpecial=s;
+        }
 
         public CheckersBoard Current
         {
             get;
             private set;
         }
+
+
         CheckersBoard init;
 
         public CheckersBoard GetInitNode()
@@ -22,7 +47,7 @@ namespace Checkers
         }
 
 
-        public CheckersGame(Boolean a)
+        private CheckersGame(Boolean a)
         {
             GridEntry[] values = new GridEntry[boardSize * boardSize];
 
@@ -74,7 +99,7 @@ namespace Checkers
             Current = init;
         }
 
-        public CheckersGame()
+        private CheckersGame()
         {
             GridEntry[] values = new GridEntry[boardSize * boardSize];
 
@@ -129,7 +154,40 @@ namespace Checkers
         {
             CheckersBoard next = (CheckersBoard)Current.FindNextMove1(depth);
             if (next != null)
+            {
                 Current = next;
+                AddToTranspositionTable(next);
+            }
+        }
+
+        public CheckersBoard AddToTranspositionTable(CheckersBoard newC)
+        {
+            CheckersBoard oldC=null;
+            String key=newC.GetBoardString();
+            if (transpositionTable.TryGetValue(key, out oldC))
+            {
+                return oldC;
+            }
+            else
+            {
+                transpositionTable.Add(key, newC);
+                return newC;
+            }
+        }
+
+        public void printTranspositionTable()
+        {
+            var enumerator = transpositionTable.GetEnumerator();
+            while (enumerator.MoveNext())
+            {
+                CheckersBoard c = enumerator.Current.Value;
+                //Console.WriteLine(c.GetBoardString());
+                if (c.IsScoreDifferent())
+                {
+                    Console.WriteLine(c.GetScoreString());
+                }
+                //Console.WriteLine();
+            }
         }
 
 

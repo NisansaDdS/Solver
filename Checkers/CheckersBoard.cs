@@ -45,13 +45,21 @@ namespace Checkers
             public override string ToString()
             {
                 StringBuilder sb = new StringBuilder();
+                sb.Append(GetBoardString());
+                sb.AppendFormat("score={0},ret={1},{2}", m_Score, RecursiveScore, TurnForPlayerOne);
+                return sb.ToString();
+            }
+
+            public String GetBoardString()
+            {
+                StringBuilder sb = new StringBuilder();
                 for (int i = 0; i < boardSize; i++)
                 {
                     for (int j = 0; j < boardSize; j++)
                     {
                         int val = ConvertToLinear(i, j);
                         GridEntry v = m_Values[val];
-                        char c ='-';
+                        char c = '-';
                         if (v == GridEntry.PlayerW)
                             c = 'w';
                         else if (v == GridEntry.PlayerB)
@@ -64,7 +72,6 @@ namespace Checkers
                     }
                     sb.Append('\n');
                 }
-                sb.AppendFormat("score={0},ret={1},{2}", m_Score, RecursiveScore, TurnForPlayerOne);
                 return sb.ToString();
             }
 
@@ -132,7 +139,10 @@ namespace Checkers
                 {
                     CreateChildren();
                 }
-                  
+                
+
+                childrenL.Sort(); 
+
                 for (int i = 0; i < childrenL.Count; i++)
                 {
                     yield return childrenL[i];
@@ -142,6 +152,7 @@ namespace Checkers
             private void CreateChildren()
             {
                 childrenL = new List<GameState>();
+                CheckersGame game = CheckersGame.getInstance();
                 for (int i = 0; i < m_Values.Length; i++)
                 {
                     if ((TurnForPlayerOne && (m_Values[i] == GridEntry.PlayerW || m_Values[i] == GridEntry.PlayerWk)) || (!TurnForPlayerOne && (m_Values[i] == GridEntry.PlayerB || m_Values[i] == GridEntry.PlayerBk)))
@@ -149,10 +160,15 @@ namespace Checkers
                         List<CheckersBoard> c = getChildrenByMoving(i, false);
                         for (int j = 0; j < c.Count; j++)
                         {
-                            childrenL.Add(c[j]);
+                            bool backupTurn = c[j].TurnForPlayerOne;
+                            c[j]=game.AddToTranspositionTable(c[j]);
+                            c[j].TurnForPlayerOne = backupTurn;
+                            childrenL.Add(c[j]);                            
                         }
                     }
                 }
+                
+
             }
 
 
@@ -182,6 +198,7 @@ namespace Checkers
                     }
                 }
                 m_Score = ret;
+                r_Score = ret;
             }
 
 
@@ -723,8 +740,43 @@ namespace Checkers
             }
 
 
+            
+            
+
+            public GameState FindNextMove1(int depth)
+            {
+                GameState ret = null;
+                //MiniMaxShortVersion(depth, int.MinValue + 1, int.MaxValue - 1, out ret);
+            
+                MiniMax(depth, TurnForPlayerOne, int.MinValue + 1, int.MaxValue - 1, out ret);               
+                return ret;
+            }
+
+
+        
+
+
+            public override int CompareTo(GameState obj)
+            {
+                CheckersBoard boardObj = obj as CheckersBoard;
+                int retVal = 0;
+                if (r_Score > boardObj.r_Score)
+                {
+                    retVal = 1;
+                }
+                else if (r_Score < boardObj.r_Score)
+                {
+                    retVal = -1;
+                }
+                if (TurnForPlayerOne)
+                {
+                    retVal *= -1;
+                }
+                return retVal;
+            }
+
             //Board state is uniquely identified by player positions 
-            public override bool Equals(Object obj)
+            public override bool Equals(GameState obj)
             {
                 CheckersBoard boardObj = obj as CheckersBoard;
                 if (boardObj == null)
@@ -743,15 +795,5 @@ namespace Checkers
                     return true;
                 }
             }
-
-            public GameState FindNextMove1(int depth)
-            {
-                GameState ret = null;
-                //MiniMaxShortVersion(depth, int.MinValue + 1, int.MaxValue - 1, out ret);
-            
-                MiniMax(depth, TurnForPlayerOne, int.MinValue + 1, int.MaxValue - 1, out ret);               
-                return ret;
-            }
-
         }
 }

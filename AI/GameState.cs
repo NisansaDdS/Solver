@@ -5,13 +5,24 @@ using System.Text;
 
 namespace AI
 {
-    public abstract class GameState
+    public abstract class GameState : IComparable<GameState>, IEquatable<GameState>
     {
         public GameState parent;
         public List<GameState> children = new List<GameState>();
 
         protected int m_Score;
         protected bool m_TurnForPlayerOne;
+        protected int r_Score;
+
+        public String GetScoreString()
+        {
+            return "R score: " + r_Score + " M score: " + m_Score;
+        }
+
+        public bool IsScoreDifferent()
+        {
+            return r_Score != m_Score;
+        }
 
         public bool TurnForPlayerOne
         {
@@ -125,6 +136,7 @@ namespace AI
             }
 
             RecursiveScore = needMax ? alpha : beta;
+            r_Score = RecursiveScore;
             return RecursiveScore;
         }
 
@@ -148,5 +160,17 @@ namespace AI
         }
 
 
+
+        #region IComparable<GameState> Members
+
+        public abstract int CompareTo(GameState other);
+
+        #endregion
+
+        #region IEquatable<GameState> Members
+
+        public abstract bool Equals(GameState other);
+
+        #endregion
     }
 }

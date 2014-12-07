@@ -10,10 +10,11 @@ namespace Checkers
         static void Main(string[] args)
         {
             int depth = 4;
-            CheckersGame game = new CheckersGame();
+            CheckersGame game = CheckersGame.getInstance();
             //game.Current.TurnForPlayerOne = false; //Start with black
             Console.WriteLine(game.Current.ToString());
             Console.ReadLine();
+            int steps = 0;
             while (!game.Current.IsTerminalNode())
             {
                 //White handicap
@@ -26,6 +27,13 @@ namespace Checkers
                    game.ComputerMakeMove(1);
                }
                 Console.WriteLine(game.Current.ToString());
+                Console.ReadLine();
+                steps++;
+            }
+            game.printTranspositionTable();
+            Console.WriteLine("Steps used: " + steps);
+            while (true)
+            {
                 Console.ReadLine();
             }
         }

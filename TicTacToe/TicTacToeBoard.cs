@@ -223,6 +223,16 @@ namespace TicTacToe
             return false;
         }
 
-}
+
+        public override int CompareTo(GameState other)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override bool Equals(GameState other)
+        {
+            throw new NotImplementedException();
+        }
+    }
 
 }
