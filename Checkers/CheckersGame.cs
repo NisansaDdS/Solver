@@ -2,19 +2,21 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using AI;
 
 namespace Checkers
 {
-    class CheckersGame
+    class CheckersGame : Game
     {
         static int boardSize = 10;
-        Dictionary<String, int[]> transpositionTable = new Dictionary<String, int[]>();
         static CheckersGame game = null;
         static Boolean isSpecial = false;
+        static int cutOffDepth = 0;
 
-        public static void Reset()
+        public static void Reset(int cod)
         {
             game = null;
+            cutOffDepth = cod;
         }
 
 
@@ -102,6 +104,7 @@ namespace Checkers
 
 
             init = new CheckersBoard(values, true);
+            init.Cutoff = cutOffDepth;
             Current = init;
         }
 
@@ -152,6 +155,7 @@ namespace Checkers
 
 
             init = new CheckersBoard(values, true);
+            init.Cutoff = cutOffDepth;
             Current = init;
         }
 
@@ -175,37 +179,16 @@ namespace Checkers
 
 
                 Current = next;
-                AddToTranspositionTable(next);
+                AddToCheckersTranspositionTable(next);
             }            
         }
 
-        public int[] AddToTranspositionTable(CheckersBoard newC)
-        {
-            int[] scores=null;
-            String key=newC.GetBoardString();
-            if (!transpositionTable.TryGetValue(key, out scores))
-            {
-                scores = newC.GetScores();
-                transpositionTable.Add(key, scores);
 
-            }
-            return scores;
-        }
-
-        public void printTranspositionTable()
+        public int[] AddToCheckersTranspositionTable(GameState newC)
         {
-            var enumerator = transpositionTable.GetEnumerator();
-            while (enumerator.MoveNext())
-            {
-                int[] c = enumerator.Current.Value;
-                //Console.WriteLine(c.GetBoardString());
-                if (c[0]!=c[1])
-                {
-                    Console.WriteLine("R score: " + c[0] + " M score: " +c[1]);
-                }
-                //Console.WriteLine();
-            }
+            return(Game.getInstance().AddToTranspositionTable(newC));
         }
+        
 
 
 

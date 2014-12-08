@@ -55,7 +55,7 @@ namespace Checkers
                 return sb.ToString();
             }
 
-            public String GetBoardString()
+            public override String GetBoardString()
             {
                 StringBuilder sb = new StringBuilder();
                 for (int i = 0; i < boardSize; i++)
@@ -181,15 +181,16 @@ namespace Checkers
             private void CreateChildren()
             {
                 childrenL = new List<GameState>();
-                CheckersGame game = CheckersGame.getInstance();
+                CheckersGame game = (CheckersGame)CheckersGame.getInstance();
                 for (int i = 0; i < m_Values.Length; i++)
                 {
                     if ((TurnForPlayerOne && (m_Values[i] == GridEntry.PlayerW || m_Values[i] == GridEntry.PlayerWk)) || (!TurnForPlayerOne && (m_Values[i] == GridEntry.PlayerB || m_Values[i] == GridEntry.PlayerBk)))
                     {
                         List<CheckersBoard> c = getChildrenByMoving(i, false);
                         for (int j = 0; j < c.Count; j++)
-                        { 
-                            c[j].SetScores(game.AddToTranspositionTable(c[j]));
+                        {
+                            c[j].SetScores(game.AddToCheckersTranspositionTable(c[j]));
+                            c[j].Cutoff = Cutoff;
                             childrenL.Add(c[j]);                            
                         }
                     }
@@ -775,7 +776,8 @@ namespace Checkers
                 GameState ret = null;
                 //MiniMaxShortVersion(depth, int.MinValue + 1, int.MaxValue - 1, out ret);
             
-                MiniMax(depth, TurnForPlayerOne, int.MinValue + 1, int.MaxValue - 1, out ret);               
+                MiniMax(depth, TurnForPlayerOne, int.MinValue + 1, int.MaxValue - 1, out ret);
+                
                 return ret;
             }
 
@@ -804,17 +806,45 @@ namespace Checkers
 
             private int CompareValue(CheckersBoard c1,CheckersBoard c2)
             {
+                Boolean isCombined =true;
+
                 int retVal = 0;
-                if (c1.r_Score > c2.r_Score)
+                if (c1.GetCombinedScore(isCombined) > c2.GetCombinedScore(isCombined))
                 {
                     retVal = 1;
                 }
-                else if (c1.r_Score < c2.r_Score)
+                else if (c1.GetCombinedScore(isCombined) < c2.GetCombinedScore(isCombined))
                 {
                     retVal = -1;
                 }
                 return retVal;
             }
+
+            private int GetCombinedScore(Boolean isCombined)
+            {
+                //Console.WriteLine("This "+GetScoreString());
+                //Console.WriteLine("Next "+ret.GetScoreString());
+
+                if (isCombined)
+                {                    
+                    int D = Cutoff - distFromCutoff;
+                    int C = Cutoff;
+                    double u_ratio = ((double)D / (double)C);
+                    double r_ratio = 1 - u_ratio;
+                    double val = u_ratio * m_Score + r_ratio * r_Score;
+                    if (r_Score != m_Score)
+                   {
+                       Console.WriteLine(D + " " +C+" " + r_Score + " " + u_ratio + " " + m_Score + " " + val);
+                    }
+                    return ((int)val);
+                }
+                else
+                {
+                    return r_Score;
+                }
+            }
+
+
 
             //Board state is uniquely identified by player positions 
             public override bool Equals(GameState obj)

@@ -41,16 +41,16 @@ namespace Checkers
 
         static void Main(string[] args)
         {
-            int depth = 8;
+            int depth = 4;
             int totalSteps = 0;
-            int gameCount = 500;
+            int gameCount = 100;
             int wVictories = 0;
             int bVictories = 0;
             for (int i = 0; i < gameCount; i++)
             {
                 Console.WriteLine("Playing game "+(i+1)+" of "+gameCount);
-                CheckersGame.Reset();
-                CheckersGame game = CheckersGame.getInstance();
+                CheckersGame.Reset(depth);
+                CheckersGame game = (CheckersGame)CheckersGame.getInstance();
                 int steps = 0;
                 while (!game.Current.IsTerminalNode())
                 {

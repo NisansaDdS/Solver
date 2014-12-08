@@ -13,6 +13,14 @@ namespace AI
         protected int m_Score;
         protected bool m_TurnForPlayerOne;
         protected int r_Score;
+        protected int distFromCutoff=0;
+        private int cutoff = 0;
+
+        public int Cutoff
+        {
+            get { return cutoff; }
+            set { cutoff = value; }
+        }
 
         public String GetScoreString()
         {
@@ -68,6 +76,9 @@ namespace AI
 
         public abstract /*static*/ bool IsSameBoard(GameState a, GameState b, bool compareRecursiveScore);
 
+
+        public abstract String GetBoardString();
+
      //   public abstract /*static*/ bool IsSimilarBoard(GameState a, GameState b);
 
 
@@ -114,7 +125,7 @@ namespace AI
                 return m_Score;
             }
 
-           
+            distFromCutoff = depth;
             foreach (GameState cur in GetChildren())
             {
                 GameState dummy;
@@ -143,10 +154,14 @@ namespace AI
                         }
                     }
                 }
+
+                Game.getInstance().updateTranspositionTable(cur);
+
             }
 
+           
             RecursiveScore = needMax ? alpha : beta;
-            r_Score = RecursiveScore;
+            r_Score = RecursiveScore;           
             return RecursiveScore;
         }
 

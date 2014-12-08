@@ -233,6 +233,11 @@ namespace TicTacToe
         {
             throw new NotImplementedException();
         }
+
+        public override String GetBoardString()
+        {
+            throw new NotImplementedException();
+        }
     }
 
 }
