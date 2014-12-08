@@ -12,12 +12,34 @@ namespace Checkers
         static CheckersGame game = null;
         static Boolean isSpecial = false;
         static int cutOffDepth = 0;
+        bool[] useNewFunction = new bool[2];
+
+        public bool[] UseNewFunction
+        {
+            get { return useNewFunction; }
+            set {
+
+                if (value[0])
+                {
+                    useNewFunction[0] = true;
+                }
+
+                if (value[1])
+                {
+                    useNewFunction[1] = true;
+                }               
+            
+            }
+        }
 
         public static void Reset(int cod)
         {
             game = null;
             cutOffDepth = cod;
         }
+
+       
+
 
 
         public static CheckersGame getInstance()

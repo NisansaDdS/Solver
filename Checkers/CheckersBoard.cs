@@ -144,9 +144,12 @@ namespace Checkers
                 {
                     CreateChildren();
                 }
+
+                
+                childrenL.Sort(); //Do the actual sort
+
                 
 
-                childrenL.Sort(); //Do the actual sort
 
                 //This is done to reduce the probability of going into infnite loops on the same set of moves
                 Random r = new Random();
@@ -191,6 +194,7 @@ namespace Checkers
                         {
                             c[j].SetScores(game.AddToCheckersTranspositionTable(c[j]));
                             c[j].Cutoff = Cutoff;
+                            c[j].DistFromCutoff = DistFromCutoff - 1;
                             childrenL.Add(c[j]);                            
                         }
                     }
@@ -786,8 +790,9 @@ namespace Checkers
 
 
             public override int CompareTo(GameState obj)
-            {
+            {               
                 CheckersBoard boardObj = obj as CheckersBoard;
+             
                 int retVal = CompareValue(this,boardObj);
              
 
@@ -806,7 +811,17 @@ namespace Checkers
 
             private int CompareValue(CheckersBoard c1,CheckersBoard c2)
             {
-                Boolean isCombined =true;
+                Boolean isCombined =false;
+                bool[] useNewFunction = CheckersGame.getInstance().UseNewFunction;
+                if (TurnForPlayerOne)
+                {
+                    isCombined = useNewFunction[0];
+                }
+                else
+                {
+                    isCombined = useNewFunction[1];
+                }
+
 
                 int retVal = 0;
                 if (c1.GetCombinedScore(isCombined) > c2.GetCombinedScore(isCombined))
@@ -826,16 +841,13 @@ namespace Checkers
                 //Console.WriteLine("Next "+ret.GetScoreString());
 
                 if (isCombined)
-                {                    
-                    int D = Cutoff - distFromCutoff;
+                {
+                    
+                    int D = Cutoff - DistFromCutoff;
                     int C = Cutoff;
                     double u_ratio = ((double)D / (double)C);
                     double r_ratio = 1 - u_ratio;
-                    double val = u_ratio * m_Score + r_ratio * r_Score;
-                    if (r_Score != m_Score)
-                   {
-                       Console.WriteLine(D + " " +C+" " + r_Score + " " + u_ratio + " " + m_Score + " " + val);
-                    }
+                    double val = u_ratio * m_Score + r_ratio * r_Score;                   
                     return ((int)val);
                 }
                 else

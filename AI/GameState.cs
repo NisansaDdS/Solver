@@ -13,7 +13,13 @@ namespace AI
         protected int m_Score;
         protected bool m_TurnForPlayerOne;
         protected int r_Score;
-        protected int distFromCutoff=0;
+        int distFromCutoff = 0;
+
+        public int DistFromCutoff
+        {
+            get { return distFromCutoff; }
+            set { distFromCutoff = value; }
+        }
         private int cutoff = 0;
 
         public int Cutoff
@@ -126,6 +132,7 @@ namespace AI
             }
 
             distFromCutoff = depth;
+           
             foreach (GameState cur in GetChildren())
             {
                 GameState dummy;
