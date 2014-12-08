@@ -10,6 +10,13 @@ namespace AI
         private Dictionary<String, int[]> transpositionTable = new Dictionary<String, int[]>();
 
         private static Game game = null;
+        private static List<Int32> pruneHeights = new List<Int32>();
+
+        public static List<Int32> PruneHeights
+        {
+            get { return pruneHeights; }
+            set { pruneHeights = value; }
+        }
 
         public static Game getInstance()
         {

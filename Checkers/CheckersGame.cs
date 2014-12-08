@@ -13,6 +13,19 @@ namespace Checkers
         static Boolean isSpecial = false;
         static int cutOffDepth = 0;
         bool[] useNewFunction = new bool[2];
+        public List<Int32> branches = new List<Int32>();
+
+        public double GetBranchingFactor()
+        {
+            int sum = 0;
+            for (int i = 0; i < branches.Count; i++)
+            {
+                sum += branches[i];
+            }
+            return (sum / branches.Count);
+        }
+
+
 
         public bool[] UseNewFunction
         {
@@ -36,6 +49,7 @@ namespace Checkers
         {
             game = null;
             cutOffDepth = cod;
+            PruneHeights = new List<Int32>();
         }
 
        

@@ -41,17 +41,19 @@ namespace Checkers
 
         static void Main(string[] args)
         {
-            int depth = 4;
+            int depth = 5;
             int totalSteps = 0;
-            int gameCount = 100;
+            int totalpruned = 0;
+            int gameCount = 10;
             int wVictories = 0;
             int bVictories = 0;
+            DateTime t1 = DateTime.Now;
             for (int i = 0; i < gameCount; i++)
             {
                 Console.WriteLine("Playing game "+(i+1)+" of "+gameCount);
                 CheckersGame.Reset(depth);                 
                 CheckersGame game = (CheckersGame)CheckersGame.getInstance();
-                game.UseNewFunction = new bool[] { false,true};
+                game.UseNewFunction = new bool[] { true,true};
                 int steps = 0;
                 while (!game.Current.IsTerminalNode())
                 {
@@ -69,11 +71,22 @@ namespace Checkers
                     bVictories++;
                 }
                 totalSteps += steps;
+
+                double brancFac=game.GetBranchingFactor();
+                for (int j = 0; j < CheckersGame.PruneHeights.Count; j++)
+                {
+                    totalpruned += (int)Math.Pow(brancFac, CheckersGame.PruneHeights[j]);
+                }
+
+              //  totalpruned += CheckersGame.PrunedCount;                
             }
+            DateTime t2 = DateTime.Now;
             Console.WriteLine("Total steps used: " + totalSteps);
             Console.WriteLine("Avg steps used: " + ((double)totalSteps/(double)gameCount));
             Console.WriteLine("White won count: " + wVictories);
             Console.WriteLine("Black won count: " + bVictories);
+            Console.WriteLine("Time Diff: " + (t2 - t1).TotalMilliseconds);
+            Console.WriteLine("Pruning cuts : " + totalpruned);
             Console.ReadLine();
             
             

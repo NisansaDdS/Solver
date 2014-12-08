@@ -148,7 +148,7 @@ namespace Checkers
                 
                 childrenL.Sort(); //Do the actual sort
 
-                
+                CheckersGame.getInstance().branches.Add(childrenL.Count);
 
 
                 //This is done to reduce the probability of going into infnite loops on the same set of moves
@@ -816,21 +816,34 @@ namespace Checkers
                 if (TurnForPlayerOne)
                 {
                     isCombined = useNewFunction[0];
+                   // Console.WriteLine("White: "+isCombined);
                 }
                 else
                 {
                     isCombined = useNewFunction[1];
+                   // Console.WriteLine("Black: " + isCombined);
                 }
 
 
                 int retVal = 0;
-                if (c1.GetCombinedScore(isCombined) > c2.GetCombinedScore(isCombined))
+                if (c1.GetCombinedScore(isCombined) < c2.GetCombinedScore(isCombined))
+                {
+                    retVal = -1;
+                }
+                else if (c1.GetCombinedScore(isCombined) > c2.GetCombinedScore(isCombined))
                 {
                     retVal = 1;
                 }
-                else if (c1.GetCombinedScore(isCombined) < c2.GetCombinedScore(isCombined))
+                else //Tiebreak with old algorithm
                 {
-                    retVal = -1;
+                    if (c1.GetCombinedScore(false) < c2.GetCombinedScore(false))
+                    {
+                        retVal = -1;
+                    }
+                    else if (c1.GetCombinedScore(false) > c2.GetCombinedScore(false))
+                    {
+                        retVal = 1;
+                    }
                 }
                 return retVal;
             }
@@ -841,11 +854,10 @@ namespace Checkers
                 //Console.WriteLine("Next "+ret.GetScoreString());
 
                 if (isCombined)
-                {
-                    
-                    int D = Cutoff - DistFromCutoff;
+                {                    
+                    int D = DistFromCutoff;
                     int C = Cutoff;
-                    double u_ratio = ((double)D / (double)C);
+                    double u_ratio =  ((double)D / (double)C);
                     double r_ratio = 1 - u_ratio;
                     double val = u_ratio * m_Score + r_ratio * r_Score;                   
                     return ((int)val);

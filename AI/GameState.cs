@@ -148,6 +148,10 @@ namespace AI
                             break;
                         }
                     }
+                    else
+                    {
+                        Game.PruneHeights.Add(depth - 1);
+                    }
                 }
                 else
                 {
@@ -159,6 +163,10 @@ namespace AI
                         {
                             break;
                         }
+                    }
+                    else
+                    {
+                        Game.PruneHeights.Add(depth - 1);
                     }
                 }
 
