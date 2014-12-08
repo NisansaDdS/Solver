@@ -155,15 +155,28 @@ namespace Checkers
             Current = init;
         }
 
+       
+        int unchangedSteps = 0;
 
         public void ComputerMakeMove(int depth)
         {
             CheckersBoard next = (CheckersBoard)Current.FindNextMove1(depth);
             if (next != null)
             {
+                if (Current.RecursiveScore == next.RecursiveScore)
+                {
+                    unchangedSteps++;
+                }
+
+                if (unchangedSteps > 100)  //http://www.darkfish.com/checkers/rules.html
+                {
+                    next.SetGameDrawn();                   
+                }
+
+
                 Current = next;
                 AddToTranspositionTable(next);
-            }
+            }            
         }
 
         public int[] AddToTranspositionTable(CheckersBoard newC)

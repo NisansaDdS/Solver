@@ -43,7 +43,7 @@ namespace Checkers
         {
             int depth = 4;
             int totalSteps = 0;
-            int gameCount = 4;
+            int gameCount = 500;
             int wVictories = 0;
             int bVictories = 0;
             for (int i = 0; i < gameCount; i++)

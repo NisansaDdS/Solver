@@ -41,6 +41,11 @@ namespace Checkers
                 ComputeScore();
             }
 
+            public void SetGameDrawn()
+            {
+                GameOver = true;
+                r_Score = 0; //Set game drawn
+            }
 
             public override string ToString()
             {
