@@ -41,7 +41,7 @@ namespace Checkers
 
         static void Main(string[] args)
         {
-            int depth = 4;
+            int depth = 8;
             int totalSteps = 0;
             int gameCount = 500;
             int wVictories = 0;
