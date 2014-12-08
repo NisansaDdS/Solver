@@ -51,7 +51,7 @@ namespace Checkers
                 Console.WriteLine("Playing game "+(i+1)+" of "+gameCount);
                 CheckersGame.Reset(depth);                 
                 CheckersGame game = (CheckersGame)CheckersGame.getInstance();
-                game.UseNewFunction = new bool[] { false, true };
+                game.UseNewFunction = new bool[] { false,true};
                 int steps = 0;
                 while (!game.Current.IsTerminalNode())
                 {
