@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using AI;
+using System;
+using System.IO;
 
 namespace Checkers
 {
@@ -14,6 +16,13 @@ namespace Checkers
         static int cutOffDepth = 0;
         bool[] useNewFunction = new bool[2];
         public List<Int32> branches = new List<Int32>();
+        private static int power = 0;
+
+        public static int Power
+        {
+            get { return CheckersGame.power; }
+            set { CheckersGame.power = value; }
+        }
 
         public double GetBranchingFactor()
         {
@@ -50,10 +59,11 @@ namespace Checkers
             game = null;
             cutOffDepth = cod;
             PruneHeights = new List<Int32>();
+            Game.getInstance().ResetTranspositionTable();
         }
 
-       
 
+        
 
 
         public static CheckersGame getInstance()
@@ -198,9 +208,23 @@ namespace Checkers
        
         int unchangedSteps = 0;
 
-        public void ComputerMakeMove(int depth)
+        public CheckersBoard ComputerMakeMove(int depth)
         {
             CheckersBoard next = (CheckersBoard)Current.FindNextMove1(depth);
+
+  /*          string path = @"D:\Documents\Visual Studio 2008\Projects\Solver\WriteLines.txt";
+            using (StreamWriter sw = File.AppendText(path))
+            {
+                sw.WriteLine("////////////////////////////////////////////////////////");
+                sw.WriteLine(Current.ToString());
+                sw.WriteLine(Current.getChildrenString());
+                sw.WriteLine(next.ToString());
+                sw.WriteLine("////////////////////////////////////////////////////////");                
+            }*/
+
+
+
+
             if (next != null)
             {
                 if (Current.RecursiveScore == next.RecursiveScore)
@@ -214,9 +238,19 @@ namespace Checkers
                 }
 
 
-                Current = next;
+                //Current = next;
                 AddToCheckersTranspositionTable(next);
-            }            
+            }
+            return next;
+
+        }
+
+        public void updateState(CheckersBoard next)
+        {
+            if (next != null)
+            {
+                Current = next;
+            }
         }
 
 

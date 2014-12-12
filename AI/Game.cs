@@ -18,6 +18,13 @@ namespace AI
             set { pruneHeights = value; }
         }
 
+        public void ResetTranspositionTable()
+        {
+            transpositionTable = new Dictionary<String, int[]>();
+            System.GC.Collect();
+        }
+
+
         public static Game getInstance()
         {
             if (game == null)
