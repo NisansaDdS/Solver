@@ -60,7 +60,7 @@ namespace AI
             get;
             protected set;
         }
-        public bool GameOver
+       public bool GameOver
         {
             get;
             protected set;

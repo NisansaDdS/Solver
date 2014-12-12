@@ -100,7 +100,9 @@ namespace Checkers
             public override bool IsTerminalNode()
             {
                 if (GameOver)
+                {                   
                     return true;
+                }
                 //If either one has run out of pieces, this is a terminal node
                 int wCount = 0;
                 int bcount = 0;
@@ -118,6 +120,7 @@ namespace Checkers
 
                 if (wCount == 0 || bcount == 0)
                 {
+                    //Console.WriteLine("2");
                     return true;
                 }
 
@@ -126,6 +129,7 @@ namespace Checkers
                 CreateChildren();
                 if (childrenL.Count == 0)
                 {
+                   // Console.WriteLine("3");
                     return true;
                 }
 
@@ -158,27 +162,28 @@ namespace Checkers
 
 
                 //This is done to reduce the probability of going into infnite loops on the same set of moves
-   /*             Random r = new Random();
-                for (int i = 0; i < childrenL.Count-1; i++)
+                if (CheckersGame.Randomization)
                 {
-                    for (int j = i; j < childrenL.Count; j++)
+                    Random r = new Random();
+                    for (int i = 0; i < childrenL.Count - 1; i++)
                     {
-                        if (CompareValue(childrenL[i], childrenL[j]) == 0)//If both are the same 
+                        for (int j = i; j < childrenL.Count; j++)
                         {
-                            if (r.Next(1000) > 500) //Swap randomly.
+                            if (CompareValue(childrenL[i], childrenL[j]) == 0)//If both are the same 
                             {
-                                GameState temp1 = childrenL[i];
-                                GameState temp2 = childrenL[i];
-                                childrenL.RemoveAt(i);
-                                childrenL.Insert(i, temp2);
-                                childrenL.RemoveAt(j);
-                                childrenL.Insert(j, temp1);
-                            }                            
+                                if (r.Next(1000) > 500) //Swap randomly.
+                                {
+                                    GameState temp1 = childrenL[i];
+                                    GameState temp2 = childrenL[i];
+                                    childrenL.RemoveAt(i);
+                                    childrenL.Insert(i, temp2);
+                                    childrenL.RemoveAt(j);
+                                    childrenL.Insert(j, temp1);
+                                }
+                            }
                         }
                     }
-                }*/
-                
-                
+                }  
 
 
                 for (int i = 0; i < childrenL.Count; i++)

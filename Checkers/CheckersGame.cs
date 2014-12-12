@@ -17,6 +17,13 @@ namespace Checkers
         bool[] useNewFunction = new bool[2];
         public List<Int32> branches = new List<Int32>();
         private static int power = 0;
+        static Boolean randomization = false;
+
+        public static Boolean Randomization
+        {
+            get { return CheckersGame.randomization; }
+            set { CheckersGame.randomization = value; }
+        }
 
         public static int Power
         {
@@ -231,9 +238,10 @@ namespace Checkers
                 {
                     unchangedSteps++;
                 }
-
-                if (unchangedSteps > 100)  //http://www.darkfish.com/checkers/rules.html
+                                             
+                if (unchangedSteps > 100 && getBoardAge(next)>50)  //http://www.darkfish.com/checkers/rules.html
                 {
+                    Console.WriteLine("This");
                     next.SetGameDrawn();                   
                 }
 

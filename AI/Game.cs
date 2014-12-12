@@ -37,13 +37,36 @@ namespace AI
 
         public void updateTranspositionTable(GameState newC)
         {            
-            String key = newC.GetBoardString();
-            if (transpositionTable.ContainsKey(key))
-            {
-                transpositionTable.Remove(key);
-            }
-            transpositionTable.Add(key, newC.GetScores());
+          //  String key = newC.GetBoardString();
+          //  if (transpositionTable.ContainsKey(key))
+          //  {
+          //      transpositionTable.Remove(key);
+          //  }
+
+            AddToTranspositionTable(newC);
+          //  transpositionTable.Add(key, newC.GetScores());
            // Console.WriteLine("U: "+transpositionTable.Count);
+        }
+
+        public int getBoardAge(GameState newC)
+        {
+            int[] scores = GetFromTranspositionTable(newC);
+            if (scores == null)
+            {
+                return 0;
+            }
+            else
+            {
+                return scores[2];
+            }
+        }
+        
+        
+        public int[] GetFromTranspositionTable(GameState newC)
+        {
+            int[] scores = null;
+            transpositionTable.TryGetValue(newC.GetBoardString(), out scores);         
+            return scores;
         }
 
 
@@ -51,12 +74,23 @@ namespace AI
         {
             int[] scores = null;
             String key = newC.GetBoardString();
+            int[] tempScores = newC.GetScores();
             if (!transpositionTable.TryGetValue(key, out scores))
             {
-                scores = newC.GetScores();
-                transpositionTable.Add(key, scores);
+                scores = new int[3];                
+                scores[0] = tempScores[0];
+                scores[1] = tempScores[1];
+                scores[2] = 1;               
             }
-         //   Console.WriteLine("A: " + transpositionTable.Count);
+            else
+            {   
+                scores[0] = tempScores[0];
+                scores[1] = tempScores[1];
+                scores[2]++;
+                transpositionTable.Remove(key);
+            }
+            transpositionTable.Add(key, scores);
+            //Console.WriteLine("A: " + transpositionTable.Count);
             return scores;
         }
 
