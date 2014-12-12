@@ -239,7 +239,7 @@ namespace Checkers
                     unchangedSteps++;
                 }
                                              
-                if (unchangedSteps > 100 && getBoardAge(next)>50)  //http://www.darkfish.com/checkers/rules.html
+                if (unchangedSteps > 100 && getBoardAge(next)>5)  //http://www.darkfish.com/checkers/rules.html
                 {
                     Console.WriteLine("This");
                     next.SetGameDrawn();                   

@@ -60,22 +60,48 @@ namespace Checkers
                 if (val.Equals("S", StringComparison.OrdinalIgnoreCase))
                 {
 
-                    int depth = 15;
+                     int depth = 15;
                     int totalSteps = 0;
                     int totalpruned = 0;
                     int gameCount = 10;
                     int wVictories = 0;
                     int bVictories = 0;
+                    int powerLimit = 10;
                     DateTime t1 = DateTime.Now;
                     // int i = 0;
                     List<Int32> powers = new List<Int32>();
                     List<Int32> timeLimits = new List<Int32>();
-                    for (int i = 0; i <= 10; i++)
+
+                    while (true)
+                    {
+                        Console.WriteLine("Enter V for verbose, A for Auto: ");
+                        val = Console.ReadLine();
+                        if (val.Equals("A", StringComparison.OrdinalIgnoreCase))
+                        {
+                            break;
+                        }
+                        else if (val.Equals("V", StringComparison.OrdinalIgnoreCase))
+                        {
+                            depth = GetNumericalInput("Depth");
+                            gameCount = GetNumericalInput("Game Count");
+                            powerLimit = GetNumericalInput("Power Limit");
+                            break;
+                        }
+                        else
+                        {
+                            Console.WriteLine("Invalid input");
+                        }
+                    }
+
+
+
+                    
+                    for (int i = 0; i <= powerLimit; i++)
                     {
                         powers.Add(i);
                         timeLimits.Add((i + 1) * 10);
                     }
-                    /*     for (int i = 20; i <= 100; i=i+10)
+                    /*     for (int i = (2*powerLimit); i <= (10*powerLimit); i=i+10)
                           {
                               powers.Add(i);
                     //          timeLimits.Add(i * 10);
@@ -216,6 +242,7 @@ namespace Checkers
                 {
                     int depth = 4;
                     CheckersGame game = CheckersGame.getInstance();
+                    CheckersGame.Reset(depth);
                     //game.Current.TurnForPlayerOne = false; //Start with black
                     Console.WriteLine(game.Current.ToString());
                     Console.ReadLine();
@@ -257,6 +284,25 @@ namespace Checkers
                     Console.WriteLine("Invalid input");
                 }
             }
+        }
+
+        private static int GetNumericalInput(String Title)
+        {
+            while (true)
+            {
+                Console.WriteLine(Title+": ");
+                String val = Console.ReadLine();
+                try
+                {
+                    int num = Int32.Parse(val);
+                    return num;
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("Invalid input");
+                }
+            }
+            return 0; //Unreachable
         }
 
     }
