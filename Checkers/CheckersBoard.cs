@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using AI;
+using System;
+using System.IO;
 
 namespace Checkers
 {
@@ -144,15 +146,19 @@ namespace Checkers
                 {
                     CreateChildren();
                 }
-
+                
                 
                 childrenL.Sort(); //Do the actual sort
+
+
+
+                
 
                 CheckersGame.getInstance().branches.Add(childrenL.Count);
 
 
                 //This is done to reduce the probability of going into infnite loops on the same set of moves
-                Random r = new Random();
+   /*             Random r = new Random();
                 for (int i = 0; i < childrenL.Count-1; i++)
                 {
                     for (int j = i; j < childrenL.Count; j++)
@@ -170,7 +176,7 @@ namespace Checkers
                             }                            
                         }
                     }
-                }
+                }*/
                 
                 
 
@@ -828,21 +834,21 @@ namespace Checkers
                 int retVal = 0;
                 if (c1.GetCombinedScore(isCombined) < c2.GetCombinedScore(isCombined))
                 {
-                    retVal = -1;
+                    retVal = 1;
                 }
                 else if (c1.GetCombinedScore(isCombined) > c2.GetCombinedScore(isCombined))
                 {
-                    retVal = 1;
+                    retVal = -1;
                 }
                 else //Tiebreak with old algorithm
                 {
                     if (c1.GetCombinedScore(false) < c2.GetCombinedScore(false))
                     {
-                        retVal = -1;
+                        retVal = 1;
                     }
                     else if (c1.GetCombinedScore(false) > c2.GetCombinedScore(false))
                     {
-                        retVal = 1;
+                        retVal = -1;
                     }
                 }
                 return retVal;
@@ -857,7 +863,7 @@ namespace Checkers
                 {                    
                     int D = DistFromCutoff;
                     int C = Cutoff;
-                    double u_ratio =  ((double)D / (double)C);
+                    double u_ratio = Math.Pow( ((double)D / (double)C),CheckersGame.Power);
                     double r_ratio = 1 - u_ratio;
                     double val = u_ratio * m_Score + r_ratio * r_Score;                   
                     return ((int)val);
@@ -866,6 +872,17 @@ namespace Checkers
                 {
                     return r_Score;
                 }
+            }
+
+            public String getChildrenString()
+            {
+                String line=childrenL.Count + "....................................";
+                for (int i = 0; i < childrenL.Count; i++)
+                {
+                    line+=childrenL[i].ToString();
+                }
+                line+="....................................\n";
+                return line;
             }
 
 
