@@ -238,8 +238,8 @@ namespace Checkers
                 {
                     unchangedSteps++;
                 }
-                                             
-                if (unchangedSteps > 100 && getBoardAge(next)>5)  //http://www.darkfish.com/checkers/rules.html
+
+                if ((!Randomization && unchangedSteps > 100) || (Randomization && unchangedSteps > 100 && getBoardAge(next) > 5))  //http://www.darkfish.com/checkers/rules.html
                 {
                     Console.WriteLine("This");
                     next.SetGameDrawn();                   

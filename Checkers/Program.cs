@@ -109,13 +109,13 @@ namespace Checkers
 
                     double[,] stats = new double[powers.Count, timeLimits.Count];
 
-                    for (int l = 0; l < timeLimits.Count; l++)
+                  /*  for (int l = 0; l < timeLimits.Count; l++)
                     {
                         for (int i = 0; i < powers.Count; i++)
                         {
                             stats[i, l] = Double.NegativeInfinity;
                         }
-                    }
+                    }*/
 
 
                     gameCount = powers.Count;
@@ -128,7 +128,7 @@ namespace Checkers
                         {
 
 
-                            for (int i = 0; i < powers.Count; i++)
+                            for (int i = 0; i < 4/*powers.Count*/; i++)
                             {
 
 
@@ -142,7 +142,7 @@ namespace Checkers
                                 Console.WriteLine("Power " + powers[i]);
                                 CheckersGame game = (CheckersGame)CheckersGame.getInstance();
                                 //game.UseNewFunction = new bool[] { false, false };
-                                game.UseNewFunction = new bool[] { true, true };
+                                game.UseNewFunction = new bool[] { false, false };
                                 int steps = 0;
                                 int depthSum = 0;
                                 while (!game.Current.IsTerminalNode())
@@ -169,8 +169,8 @@ namespace Checkers
                                     }
                                     steps++;
                                 }
-                                // stats[i,l] += ((double)depthSum / (double)steps);
-                                stats[i, l] = Math.Max(((double)depthSum / (double)steps), stats[i, l]);
+                                 stats[i,l] += ((double)depthSum / (double)steps);
+                              //  stats[i, l] = Math.Max(((double)depthSum / (double)steps), stats[i, l]);
                                 Console.WriteLine("Avg depth: " + stats[i, l]);
 
                                 /*              if (game.Current.RecursiveScore > 0)
@@ -225,8 +225,8 @@ namespace Checkers
                             line = powers[i] + ",";
                             for (int l = 0; l < timeLimits.Count; l++)
                             {
-                                // line += (stats[i,l] / loopCount) + ",";
-                                line += stats[i, l] + ",";
+                                 line += (stats[i,l] / loopCount) + ",";
+                                //line += stats[i, l] + ",";
                             }
                             sw.WriteLine(line);
                         }
@@ -248,7 +248,7 @@ namespace Checkers
                     Console.ReadLine();
                     int steps = 0;
                     CheckersBoard best = game.Current;
-                    game.UseNewFunction = new bool[] { false, true };
+                    game.UseNewFunction = new bool[] { true, true };
                     CheckersGame.Randomization = true;
                     CheckersGame.Power = 4;
                     while (!game.Current.IsTerminalNode())
